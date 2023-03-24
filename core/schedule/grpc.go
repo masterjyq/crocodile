@@ -214,6 +214,7 @@ func RegistryClient(version string, port int) {
 	for {
 		// ctx, cancel = context.WithTimeout(context.Background(), defaultRPCTimeout)
 		addrs := config.CoreConf.Client.ServerAddrs
+		ip := config.CoreConf.Client.Ip
 		if len(addrs) == 0 {
 			log.Error("server addrs is empty")
 			// cancel()
@@ -239,6 +240,7 @@ func RegistryClient(version string, port int) {
 		hbClient := pb.NewHeartbeatClient(conn)
 		hostname, _ := os.Hostname()
 		regHost := pb.RegistryReq{
+			Ip:        ip,
 			Port:      int32(port),
 			Hostname:  hostname,
 			Version:   version,
@@ -262,6 +264,7 @@ func RegistryClient(version string, port int) {
 			case <-timer.C:
 				ctx, cancel := context.WithTimeout(context.Background(), defaultRPCTimeout)
 				hbreq := &pb.HeartbeatReq{
+					Ip:          ip,
 					Port:        int32(port),
 					RunningTask: runningtask.GetRunningTasks(),
 				}

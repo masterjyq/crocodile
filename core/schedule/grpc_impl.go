@@ -140,14 +140,17 @@ func (hs *HeartbeatService) RegistryHost(ctx context.Context, req *pb.RegistryRe
 	var (
 		id string
 	)
-
-	p, ok := peer.FromContext(ctx)
-	if !ok {
-		return &pb.Empty{}, errors.New("Registry failed")
+	if req.Ip == "" {
+		p, ok := peer.FromContext(ctx)
+		if !ok {
+			return &pb.Empty{}, errors.New("Registry failed")
+		}
+		ip, _, _ := net.SplitHostPort(p.Addr.String())
+		log.Debug("registryHost new worker", zap.Any("req", req))
+		req.Ip = ip
+	} else {
+		log.Debug("registryHost new worker from req", zap.Any("req", req))
 	}
-	ip, _, _ := net.SplitHostPort(p.Addr.String())
-	log.Debug("registryHost new worker", zap.Any("req", req))
-	req.Ip = ip
 	addr := fmt.Sprintf("%s:%d", req.Ip, req.Port)
 
 	isinstall, err := model.QueryIsInstall(ctx)
@@ -199,11 +202,14 @@ func (hs *HeartbeatService) RegistryHost(ctx context.Context, req *pb.RegistryRe
 // SendHb recv heatneat from client
 func (hs *HeartbeatService) SendHb(ctx context.Context, hb *pb.HeartbeatReq) (*pb.Empty, error) {
 
-	p, ok := peer.FromContext(ctx)
-	if !ok {
-		return &pb.Empty{}, errors.New("get peer failed")
+	ip := hb.GetIp()
+	if ip == "" {
+		p, ok := peer.FromContext(ctx)
+		if !ok {
+			return &pb.Empty{}, errors.New("get peer failed")
+		}
+		ip, _, _ = net.SplitHostPort(p.Addr.String())
 	}
-	ip, _, _ := net.SplitHostPort(p.Addr.String())
 	log.Debug("recv hearbeat", zap.String("addr", fmt.Sprintf("%s:%d", ip, hb.Port)))
 	err := model.UpdateHostHearbeat(ctx, ip, hb.GetPort(), hb.GetRunningTask())
 	return &pb.Empty{}, err

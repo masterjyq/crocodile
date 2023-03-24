@@ -264,6 +264,7 @@ func (m *RegistryReq) GetRemark() string {
 
 type HeartbeatReq struct {
 	// string ip = 1;
+	Ip                   string   `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`
 	Port                 int32    `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
 	RunningTask          []string `protobuf:"bytes,3,rep,name=running_task,json=runningTask,proto3" json:"running_task,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -308,6 +309,13 @@ func (m *HeartbeatReq) GetRunningTask() []string {
 		return m.RunningTask
 	}
 	return nil
+}
+
+func (m *HeartbeatReq) GetIp() string {
+	if m != nil {
+		return m.Ip
+	}
+	return ""
 }
 
 type Empty struct {

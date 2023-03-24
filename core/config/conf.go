@@ -66,12 +66,13 @@ type db struct {
 }
 
 type redis struct {
-	Addr string
+	Addr     string
 	PassWord string
 }
 
 // Client crocodile client config
 type Client struct {
+	Ip          string
 	Port        int
 	ServerAddrs []string
 	ServerPort  int

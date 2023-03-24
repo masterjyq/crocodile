@@ -217,36 +217,42 @@ func Run(mode define.RunMode, lis net.Listener) error {
 // tryDisConn will close grpc and http conn
 // if time rather than 10s, will immediately close
 func tryDisConn(gRPCServer *grpc.Server, httpServer *http.Server, mode define.RunMode) {
+	log.Info("start run grpc server")
 
 	signals := make(chan os.Signal, 1)
 
-	signal.Notify(signals, os.Interrupt, os.Kill, syscall.SIGKILL,
-		syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGILL, syscall.SIGTRAP,
-		syscall.SIGABRT,
-	)
+	signal.Notify(signals, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGILL, syscall.SIGTRAP, syscall.SIGABRT)
 
+	log.Info("wait signals")
 	select {
 	case sig := <-signals:
-		go func() {
-			select {
-			case <-time.After(time.Second * 10):
-				log.Warn("Shutdown gracefully timeout, application will shutdown immediately.")
-				os.Exit(0)
+		switch sig {
+		case syscall.SIGHUP:
+			// reload configuration?
+		default:
+			go func() {
+				select {
+				case <-time.After(time.Second * 10):
+					log.Warn("Shutdown gracefully timeout, application will shutdown immediately.")
+					os.Exit(0)
+				}
+			}()
+			log.Info(fmt.Sprintf("get signal %s, application will shutdown.", sig))
+			schedule.DoStopConn(mode)
+
+			// g := errgroup.Group{}
+			log.Debug("Start Stop GrpcServer")
+			gRPCServer.Stop()
+			if mode == define.Server {
+				log.Debug("Start Stop HttpServer")
+				httpServer.Shutdown(context.Background())
 			}
-		}()
-		log.Info(fmt.Sprintf("get signal %s, application will shutdown.", sig))
-		schedule.DoStopConn(mode)
-
-		// g := errgroup.Group{}
-		log.Debug("Start Stop GrpcServer")
-		gRPCServer.Stop()
-		if mode == define.Server {
-			log.Debug("Start Stop HttpServer")
-			httpServer.Shutdown(context.Background())
+			// g.Wait()
+			//time.Sleep(time.Second * 11)
+			os.Exit(0)
 		}
-		// g.Wait()
-		//time.Sleep(time.Second * 11)
-		os.Exit(0)
-	}
 
+	default:
+		log.Info("No signals")
+	}
 }

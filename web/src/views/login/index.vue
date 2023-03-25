@@ -27,7 +27,7 @@
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.username"
+          v-model:value="loginForm.username"
           placeholder="Username"
           name="username"
           type="text"
@@ -44,7 +44,7 @@
         <el-input
           :key="passwordType"
           ref="password"
-          v-model="loginForm.password"
+          v-model:value="loginForm.password"
           :type="passwordType"
           placeholder="Password"
           name="password"
@@ -52,8 +52,8 @@
           auto-complete="on"
         />
         <!-- <span class="show-pwd" @click="showPwd(passwordType)">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>-->
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>-->
       </el-form-item>
       <el-form-item v-show="needinstall">
         <span class="svg-container">
@@ -62,7 +62,7 @@
         <el-input
           :key="passwordType2"
           ref="password"
-          v-model="password2"
+          v-model:value="password2"
           :type="passwordType2"
           placeholder="Password"
           name="password"
@@ -70,15 +70,15 @@
           auto-complete="on"
         />
         <!-- <span class="show-pwd" @click="showPwd(passwordType2)">
-            <svg-icon :icon-class="passwordType2 === 'password' ? 'eye' : 'eye-open'" />
-          </span>-->
+              <svg-icon :icon-class="passwordType2 === 'password' ? 'eye' : 'eye-open'" />
+            </span>-->
       </el-form-item>
       <el-button
         v-if="needinstall"
         :loading="loading"
         type="primary"
         style="width: 100%; margin-bottom: 30px"
-        @click.native.prevent="startinstallcrocodile"
+        @click.prevent="startinstallcrocodile"
         >开始安装</el-button
       >
       <el-button
@@ -86,7 +86,7 @@
         :loading="loading"
         type="primary"
         style="width: 100%; margin-bottom: 30px"
-        @click.native.prevent="handleLogin"
+        @click.prevent="handleLogin"
         >登陆</el-button
       >
       <br />
@@ -139,9 +139,12 @@ export default {
   },
   watch: {
     $route: {
+      deep: true,
+
       handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
+
       immediate: true,
     },
   },
@@ -221,9 +224,6 @@ export default {
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
 $bg: #283443;
 $light_gray: #fff;
 $cursor: #fff;
@@ -233,8 +233,6 @@ $cursor: #fff;
     color: $cursor;
   }
 }
-
-/* reset element-ui css */
 .login-container {
   .el-input {
     display: inline-block;

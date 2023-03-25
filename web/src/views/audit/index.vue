@@ -7,8 +7,8 @@
         <el-form-item label="操作用户">
           <el-input
             size="mini"
-            @keyup.enter.native="startgetoperatelog"
-            v-model="operatequery.username"
+            @keyup.enter="startgetoperatelog"
+            v-model:value="operatequery.username"
           ></el-input>
         </el-form-item>
         <el-form-item label="操作类型">
@@ -16,7 +16,7 @@
             size="small"
             filterable
             clearable
-            v-model="operatequery.method"
+            v-model:value="operatequery.method"
             @change="startgetoperatelog"
           >
             <el-option
@@ -32,7 +32,7 @@
             size="small"
             filterable
             clearable
-            v-model="operatequery.module"
+            v-model:value="operatequery.module"
             @change="startgetoperatelog"
           >
             <el-option
@@ -59,13 +59,13 @@
         label="操作用户"
         min-width="80"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span>{{ scope.row.user_name }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="用户类型" min-width="100">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span v-if="scope.row.user_role === 1">普通用户</span>
           <span v-else-if="scope.row.user_role === 2">管理员</span>
           <span v-else-if="scope.row.user_role === 3">访客</span>
@@ -73,7 +73,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作类型" min-width="100">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span v-if="scope.row.method === 'PUT'">
             <el-tag type="warning" size="small">{{
               operatetype[scope.row.method]
@@ -96,28 +96,28 @@
       </el-table-column>
 
       <el-table-column align="center" label="修改模块" min-width="70">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span>{{ moduletype[scope.row.module] }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="修改模块名称" min-width="100">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span>{{ scope.row.module_name }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作时间" min-width="150">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span>{{ scope.row.operate_time }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="描述" min-width="120">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span v-if="scope.row.desc === ''">-</span>
           <span v-else>{{ scope.row.desc }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="100">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button
             :disabled="scope.row.columns.length === 0"
             type="primary"
@@ -138,7 +138,12 @@
       ></el-pagination>
     </div>
 
-    <el-dialog title="操作详情" :visible.sync="diaogVisible" center width="60%">
+    <el-dialog
+      title="操作详情"
+      v-model:visible="diaogVisible"
+      center
+      width="60%"
+    >
       <el-table
         v-loading="listLoading"
         :data="detaildata"
@@ -155,7 +160,7 @@
           label="操作字段"
           min-width="70"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
@@ -165,7 +170,7 @@
           label="旧值"
           min-width="100"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span v-if="scope.row.old_value === null">-</span>
             <span v-else>{{ scope.row.old_value }}</span>
           </template>
@@ -176,7 +181,7 @@
           label="新值"
           min-width="100"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span v-if="scope.row.new_value === null">-</span>
             <span v-else v-text="scope.row.new_value"></span>
           </template>
@@ -267,7 +272,6 @@ export default {
 .el-button--mini.is-round {
   padding: 5px 5px;
 }
-
 .demo-table-expand {
   font-size: 0;
 }
@@ -288,8 +292,7 @@ export default {
   text-align: left;
   color: #909399;
   font-size: 20px;
-  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif';
-  // margin-bottom: 6px;
+  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif'; /*// margin-bottom: 6px;*/
   font-weight: 700;
 }
 .string {

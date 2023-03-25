@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import * as Vue from 'vue'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
@@ -29,13 +29,12 @@ import '@/permission' // permission control
 // }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+window.$vueApp.use(ElementUI, { locale })
 
-Vue.config.productionTip = false
-
-new Vue({
-  el: '#app',
-  router,
-  store,
-  render: (h) => h(App),
-})
+window.$vueApp = Vue.createApp(App)
+window.$vueApp.config.globalProperties.routerAppend = (path, pathToAppend) => {
+  return path + (path.endsWith('/') ? '' : '/') + pathToAppend
+}
+window.$vueApp.use(store)
+window.$vueApp.use(router)
+window.$vueApp.mount('#app')

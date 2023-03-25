@@ -186,8 +186,7 @@ export default {
   text-align: left;
   color: #909399;
   font-size: 20px;
-  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif';
-  // margin-bottom: 6px;
+  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif'; /*// margin-bottom: 6px;*/
   font-weight: 700;
 }
 </style>

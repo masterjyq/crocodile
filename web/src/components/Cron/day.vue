@@ -1,24 +1,39 @@
 <template>
   <div :val="value_">
     <div>
-      <el-radio :disabled="disable" v-model="type" label="1" size="mini" border
+      <el-radio
+        :disabled="disable"
+        v-model:value="type"
+        label="1"
+        size="mini"
+        border
         >每日</el-radio
       >
     </div>
     <div>
-      <el-radio :disabled="disable" v-model="type" label="5" size="mini" border
+      <el-radio
+        :disabled="disable"
+        v-model:value="type"
+        label="5"
+        size="mini"
+        border
         >不指定</el-radio
       >
     </div>
     <div>
-      <el-radio :disabled="disable" v-model="type" label="2" size="mini" border
+      <el-radio
+        :disabled="disable"
+        v-model:value="type"
+        label="2"
+        size="mini"
+        border
         >周期</el-radio
       >
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         :disabled="disable"
         @change="type = '2'"
-        v-model="cycle.start"
+        v-model:value="cycle.start"
         :min="1"
         :max="31"
         size="mini"
@@ -28,7 +43,7 @@
       <el-input-number
         :disabled="disable"
         @change="type = '2'"
-        v-model="cycle.end"
+        v-model:value="cycle.end"
         :min="2"
         :max="31"
         size="mini"
@@ -37,14 +52,19 @@
       >日
     </div>
     <div>
-      <el-radio :disabled="disable" v-model="type" label="3" size="mini" border
+      <el-radio
+        :disabled="disable"
+        v-model:value="type"
+        label="3"
+        size="mini"
+        border
         >循环</el-radio
       >
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         :disabled="disable"
         @change="type = '3'"
-        v-model="loop.start"
+        v-model:value="loop.start"
         :min="1"
         :max="31"
         size="mini"
@@ -54,7 +74,7 @@
       <el-input-number
         :disabled="disable"
         @change="type = '3'"
-        v-model="loop.end"
+        v-model:value="loop.end"
         :min="1"
         :max="31"
         size="mini"
@@ -63,14 +83,19 @@
       >日执行一次
     </div>
     <div>
-      <el-radio :disabled="disable" v-model="type" label="8" size="mini" border
+      <el-radio
+        :disabled="disable"
+        v-model:value="type"
+        label="8"
+        size="mini"
+        border
         >工作日</el-radio
       >
       <span style="margin-left: 0px; margin-right: 0px">本月</span>
       <el-input-number
         :disabled="disable"
         @change="type = '8'"
-        v-model="work"
+        v-model:value="work"
         :min="1"
         :max="7"
         size="mini"
@@ -79,24 +104,34 @@
       >号，最近的工作日
     </div>
     <div>
-      <el-radio :disabled="disable" v-model="type" label="6" size="mini" border
+      <el-radio
+        :disabled="disable"
+        v-model:value="type"
+        label="6"
+        size="mini"
+        border
         >本月最后一天</el-radio
       >
     </div>
     <div>
-      <el-radio :disabled="disable" v-model="type" label="4" size="mini" border
+      <el-radio
+        :disabled="disable"
+        v-model:value="type"
+        label="4"
+        size="mini"
+        border
         >指定</el-radio
       >
-      <el-checkbox-group v-model="appoint" :min="1">
+      <el-checkbox-group v-model:value="appoint" :min="1">
         <div v-for="i in 6" :key="i">
-          <el-checkbox
-            :disabled="disable"
-            @change="type = '4'"
-            v-for="j in 6"
-            v-if="(i - 1) * 6 + j < 32"
-            :key="j"
-            :label="check((i - 1) * 6 + j)"
-          ></el-checkbox>
+          <template v-for="j in 6">
+            <el-checkbox
+              v-if="(i - 1) * 6 + j < 32"
+              :disabled="disable"
+              @change="type = '4'"
+              :label="check((i - 1) * 6 + j)"
+            ></el-checkbox>
+          </template>
         </div>
       </el-checkbox-group>
     </div>
@@ -104,6 +139,7 @@
 </template>
 
 <script>
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
   props: {
     value: {
@@ -167,7 +203,7 @@ export default {
           result.push('?')
           break
       }
-      this.$emit('input', result.join(''))
+      $emit(this, 'update:value', result.join(''))
       return result.join('')
     },
   },
@@ -231,6 +267,7 @@ export default {
   created() {
     this.updateVal()
   },
+  emits: ['update:value'],
 }
 </script>
 

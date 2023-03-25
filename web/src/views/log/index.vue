@@ -7,15 +7,15 @@
         <el-form-item label="任务名称">
           <el-input
             size="mini"
-            @keyup.enter.native="startgettasklog"
+            @keyup.enter="startgettasklog"
             clearable
-            v-model="logquery.name"
+            v-model:value="logquery.name"
           ></el-input>
         </el-form-item>
         <el-form-item label="执行结果">
           <el-select
             size="mini"
-            v-model="logquery.status"
+            v-model:value="logquery.status"
             @change="startgettasklog"
           >
             <el-option
@@ -44,13 +44,13 @@
       <el-dialog
         title="清理日志"
         center
-        :visible.sync="cleanlogvisible"
+        v-model:visible="cleanlogvisible"
         width="25%"
       >
         <el-form :rules="rules" size="mini" :model="cleanlog" ref="cleanlog">
           <el-form-item label="任务名称" prop="name">
             <el-input
-              v-model="cleanlog.name"
+              v-model:value="cleanlog.name"
               size="mini"
               placeholder="请输入需要清理的任务名称"
               style="width: 70%"
@@ -61,7 +61,7 @@
           <el-form-item label="清理时间" prop="cleanpredat">
             <el-select
               size="mini"
-              v-model="cleanlog.cleanpredat"
+              v-model:value="cleanlog.cleanpredat"
               style="width: 70%"
             >
               <el-option
@@ -101,24 +101,24 @@
         label="任务名称"
         min-width="80"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="开始时间" min-width="155">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span>{{ scope.row.start_timestr }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="结束时间" min-width="155">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span>{{ scope.row.end_timestr }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="运行时间" min-width="100">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span v-if="scope.row.total_runtime <= 1000"
             >{{ scope.row.total_runtime }}ms</span
           >
@@ -128,12 +128,12 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="触发方式" min-width="100">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span>{{ scope.row.trigger_str }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="执行结果" min-width="80">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tag v-if="scope.row.status === 1" type="success">成功</el-tag>
           <el-tag v-else-if="scope.row.status === -1" type="danger"
             >失败</el-tag
@@ -141,7 +141,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="150">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button-group>
             <el-button
               v-if="scope.row.status === -1"
@@ -161,7 +161,7 @@
         </template>
       </el-table-column>
       <el-table-column fixed="right" type="expand">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <div v-if="scope.row.status === -1">
             <span>
               <strong>ErrTask:</strong>
@@ -201,7 +201,7 @@
 
     <el-dialog
       :title="diatasktitle"
-      :visible.sync="diaogVisible"
+      v-model:visible="diaogVisible"
       center
       width="70%"
     >
@@ -224,7 +224,7 @@
             style="margin-top: 5px"
           >
             <editor
-              v-model="tasklog"
+              v-model:value="tasklog"
               theme="solarized_dark"
               lang="text"
               height="500"
@@ -445,7 +445,6 @@ export default {
 .el-button--mini.is-round {
   padding: 5px 5px;
 }
-
 .demo-table-expand {
   font-size: 0;
 }
@@ -466,8 +465,7 @@ export default {
   text-align: left;
   color: #909399;
   font-size: 20px;
-  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif';
-  // margin-bottom: 6px;
+  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif'; /*// margin-bottom: 6px;*/
   font-weight: 700;
 }
 .el-table__empty-block {

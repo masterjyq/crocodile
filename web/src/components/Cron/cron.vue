@@ -2,27 +2,37 @@
   <div class="cron" :val="value_">
     <el-row>
       <el-col :span="17">
-        <el-tabs v-model="activeName">
+        <el-tabs v-model:value="activeName">
           <el-tab-pane label="秒" name="s">
-            <second-and-minute v-model="sVal" lable="秒"></second-and-minute>
+            <second-and-minute
+              v-model:value="sVal"
+              lable="秒"
+            ></second-and-minute>
           </el-tab-pane>
           <el-tab-pane label="分" name="m">
-            <second-and-minute v-model="mVal" lable="分"></second-and-minute>
+            <second-and-minute
+              v-model:value="mVal"
+              lable="分"
+            ></second-and-minute>
           </el-tab-pane>
           <el-tab-pane label="时" name="h">
-            <hour v-model="hVal" lable="时"></hour>
+            <hour v-model:value="hVal" lable="时"></hour>
           </el-tab-pane>
           <el-tab-pane label="日" name="d">
-            <day v-model="dVal" lable="日" :disable="disableday"></day>
+            <day v-model:value="dVal" lable="日" :disable="disableday"></day>
           </el-tab-pane>
           <el-tab-pane label="月" name="month">
-            <month v-model="monthVal" lable="月"></month>
+            <month v-model:value="monthVal" lable="月"></month>
           </el-tab-pane>
           <el-tab-pane label="周" name="week">
-            <week v-model="weekVal" lable="周" :disable="disableweek"></week>
+            <week
+              v-model:value="weekVal"
+              lable="周"
+              :disable="disableweek"
+            ></week>
           </el-tab-pane>
           <el-tab-pane label="年" name="year">
-            <year v-model="yearVal" lable="年"></year>
+            <year v-model:value="yearVal" lable="年"></year>
           </el-tab-pane>
         </el-tabs>
         <el-table
@@ -86,6 +96,7 @@
 </template>
 
 <script>
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 import SecondAndMinute from './secondAndMinute'
 import hour from './hour'
 import day from './day'
@@ -163,7 +174,7 @@ export default {
 
       let v = `${this.sVal} ${this.mVal} ${this.hVal} ${this.dVal} ${this.monthVal} ${this.weekVal} ${this.yearVal}`
       if (v !== this.value) {
-        this.$emit('input', v)
+        $emit(this, 'update:value', v)
       }
       return v
     },
@@ -206,6 +217,7 @@ export default {
     week,
     year,
   },
+  emits: ['update:value'],
 }
 </script>
 
@@ -214,8 +226,6 @@ export default {
   text-align: left;
   padding: 10px;
   background: #fff;
-  /*border: 1px solid #dcdfe6;*/
-  /*box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);*/
 }
 .cron .el-tab-pane {
   line-height: 35px;

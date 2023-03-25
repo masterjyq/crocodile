@@ -1,7 +1,5 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
-Vue.use(Router)
+import * as Vue from 'vue'
+import * as VueRouter from 'vue-router'
 
 /* Layout */
 import Layout from '@/layout'
@@ -33,13 +31,13 @@ import Layout from '@/layout'
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: Vue.defineAsyncComponent(() => import('@/views/login/index')),
     hidden: true,
   },
 
   {
     path: '/404',
-    component: () => import('@/views/404'),
+    component: Vue.defineAsyncComponent(() => import('@/views/404')),
     hidden: true,
   },
 
@@ -52,7 +50,9 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         name: 'Dashboard',
-        component: () => import('@/views/dashboard/index'),
+        component: Vue.defineAsyncComponent(
+          () => import('@/views/dashboard/index')
+        ),
         meta: { title: '首页', icon: 'dashboard' },
       },
     ],
@@ -64,7 +64,7 @@ export const constantRoutes = [
       {
         path: '',
         name: 'Task',
-        component: () => import('@/views/task/index'),
+        component: Vue.defineAsyncComponent(() => import('@/views/task/index')),
         meta: { title: '任务管理', icon: 'task' },
       },
     ],
@@ -88,7 +88,9 @@ export const constantRoutes = [
       {
         path: '',
         name: 'HostGroup',
-        component: () => import('@/views/hostgroup/index'),
+        component: Vue.defineAsyncComponent(
+          () => import('@/views/hostgroup/index')
+        ),
         meta: { title: '主机组', icon: 'hostgroup' },
       },
     ],
@@ -100,7 +102,9 @@ export const constantRoutes = [
       {
         path: '',
         name: 'Host',
-        component: () => import('@/views/hosts/index'),
+        component: Vue.defineAsyncComponent(
+          () => import('@/views/hosts/index')
+        ),
         meta: { title: '主机', icon: 'host' },
       },
     ],
@@ -112,7 +116,7 @@ export const constantRoutes = [
       {
         path: '',
         name: 'Log',
-        component: () => import('@/views/log/index'),
+        component: Vue.defineAsyncComponent(() => import('@/views/log/index')),
         meta: { title: '日志管理', icon: 'log' },
       },
     ],
@@ -124,7 +128,9 @@ export const constantRoutes = [
       {
         path: '',
         name: 'Profile',
-        component: () => import('@/views/profile/index'),
+        component: Vue.defineAsyncComponent(
+          () => import('@/views/profile/index')
+        ),
         meta: { title: '个人中心', icon: 'profile' },
       },
     ],
@@ -137,7 +143,9 @@ export const constantRoutes = [
       {
         path: '',
         name: 'Notify',
-        component: () => import('@/views/notify/index'),
+        component: Vue.defineAsyncComponent(
+          () => import('@/views/notify/index')
+        ),
         meta: { title: '通知消息', icon: 'profile' },
       },
     ],
@@ -156,7 +164,9 @@ export const asyncRoutes = [
       {
         path: '',
         name: 'Audit',
-        component: () => import('@/views/audit/index'),
+        component: Vue.defineAsyncComponent(
+          () => import('@/views/audit/index')
+        ),
         meta: { title: '操作审计', icon: 'audit', roles: ['admin'] },
       },
     ],
@@ -168,7 +178,7 @@ export const asyncRoutes = [
       {
         path: '',
         name: 'User',
-        component: () => import('@/views/user/index'),
+        component: Vue.defineAsyncComponent(() => import('@/views/user/index')),
         meta: { title: '用户管理', icon: 'user', roles: ['admin'] },
       },
     ],
@@ -178,10 +188,12 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () =>
-  new Router({
-    // mode: 'history', // require service support
-    scrollBehavior: () => ({ y: 0 }),
-    routes: constantRoutes,
+  VueRouter.createRouter({
+    history: VueRouter.createWebHashHistory(),
+    routes: constantRoutes, // mode: 'history', // require service support
+    scrollBehavior: () => ({
+      top: 0,
+    }),
   })
 
 const router = createRouter()

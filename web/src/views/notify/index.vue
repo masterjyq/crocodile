@@ -19,7 +19,7 @@
           @row-click="handleclick"
         >
           <el-table-column align="center" label="消息标题">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <span style="color: gray; font-size: 15px; font-weight: bold"
                 >{{ scope.row.notify_typedesc }}: {{ scope.row.title }}</span
               >

@@ -15,7 +15,7 @@
         <el-form-item label="主机组名称" prop="name">
           <el-input
             :disabled="is_change"
-            v-model="hostgroup.name"
+            v-model:value="hostgroup.name"
             placeholder="请输入主机组名称"
             clearable
             style="width: 500px"
@@ -27,7 +27,7 @@
           <el-select
             multiple
             filterable
-            v-model="hostgroup.addrs"
+            v-model:value="hostgroup.addrs"
             style="width: 500px"
           >
             <el-option
@@ -38,8 +38,8 @@
             >
               <span style="float: left">{{ item.label }}</span>
               <!-- <span
-                  style="float: right; color: #8492a6; font-size: 13px;margin-right: 30px;"
-                >{{ item.online }}</span>-->
+                    style="float: right; color: #8492a6; font-size: 13px;margin-right: 30px;"
+                  >{{ item.online }}</span>-->
               <span
                 style="
                   float: right;
@@ -61,7 +61,7 @@
         <el-form-item label="备注" prop="remark">
           <el-input
             type="textarea"
-            v-model="hostgroup.remark"
+            v-model:value="hostgroup.remark"
             placeholder="请输入任务备注"
             clearable
             style="width: 500px"
@@ -114,13 +114,13 @@
           label="名称"
           min-width="100"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="主机" min-width="70">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-popover
               placement="right"
               width="700"
@@ -149,7 +149,7 @@
                   width="60"
                 ></el-table-column>
                 <el-table-column label="状态" width="70">
-                  <template slot-scope="scope">
+                  <template v-slot="scope">
                     <el-tag type="success" size="mini" v-if="scope.row.online"
                       >Online</el-tag
                     >
@@ -157,7 +157,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="暂停" width="80">
-                  <template slot-scope="scope">
+                  <template v-slot="scope">
                     <el-tag v-if="!scope.row.stop" size="mini" type="success"
                       >Normal</el-tag
                     >
@@ -166,21 +166,22 @@
                 </el-table-column>
               </el-table>
 
-              <el-button
-                :disabled="scope.row.addrs.length === 0"
-                type="success"
-                size="small"
-                slot="reference"
-                round
-              >
-                <strong>{{ scope.row.addrs.length }}</strong>
-              </el-button>
+              <template v-slot:reference>
+                <el-button
+                  :disabled="scope.row.addrs.length === 0"
+                  type="success"
+                  size="small"
+                  round
+                >
+                  <strong>{{ scope.row.addrs.length }}</strong>
+                </el-button>
+              </template>
             </el-popover>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="创建人" min-width="70">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.create_by }}</span>
           </template>
         </el-table-column>
@@ -195,7 +196,7 @@
           width="160"
         ></el-table-column>
         <el-table-column align="center" label="备注" min-width="100">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.remark }}</span>
           </template>
         </el-table-column>
@@ -205,7 +206,7 @@
           label="操作"
           min-width="80"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-button-group>
               <el-button
                 type="warning"
@@ -218,9 +219,9 @@
                 :hideIcon="true"
                 title="确定删除主机组?"
               >
-                <el-button slot="reference" type="danger" size="mini"
-                  >删除</el-button
-                >
+                <template v-slot:reference>
+                  <el-button type="danger" size="mini">删除</el-button>
+                </template>
               </el-popconfirm>
               <!-- <el-button type="danger" size="mini" @click="">删除</el-button> -->
             </el-button-group>

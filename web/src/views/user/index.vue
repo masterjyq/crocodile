@@ -15,7 +15,7 @@
         <el-form-item label="用户名" prop="name">
           <el-input
             :disabled="is_change"
-            v-model="user.name"
+            v-model:value="user.name"
             placeholder="请输入用户名"
             clearable
             style="width: 500px"
@@ -24,7 +24,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="用户类型" prop="role">
-          <el-select v-model="user.role">
+          <el-select v-model:value="user.role">
             <el-option
               v-for="item in roleoptions"
               :key="item.label"
@@ -35,14 +35,17 @@
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-tooltip content="修改密码" placement="top">
-            <el-switch v-if="!is_create" v-model="changepasswd"></el-switch>
+            <el-switch
+              v-if="!is_create"
+              v-model:value="changepasswd"
+            ></el-switch>
           </el-tooltip>
           <span v-if="changepasswd">
             <br />
           </span>
           <el-input
             v-if="changepasswd || is_create"
-            v-model="password1"
+            v-model:value="password1"
             type="password"
             placeholder="请输入密码"
             clearable
@@ -54,14 +57,14 @@
           <el-input
             v-if="changepasswd || is_create"
             type="password"
-            v-model="password2"
+            v-model:value="password2"
             placeholder="请再次输入密码"
             clearable
             style="width: 500px"
           ></el-input>
         </el-form-item>
         <el-form-item v-if="is_change" label="状态" prop="forbid">
-          <el-select v-model="user.forbid">
+          <el-select v-model:value="user.forbid">
             <el-option
               v-for="item in forbidoptions"
               :key="item.label"
@@ -73,7 +76,7 @@
         <el-form-item label="备注" prop="remark">
           <el-input
             type="textarea"
-            v-model="user.remark"
+            v-model:value="user.remark"
             placeholder="请输入任务备注"
             clearable
             style="width: 500px"
@@ -121,13 +124,13 @@
           label="用户名"
           min-width="100"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="用户类型" min-width="70">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-tag v-if="scope.row.role === 1" type="warning" size="mini">{{
               scope.row.rolestr
             }}</el-tag>
@@ -141,7 +144,7 @@
         </el-table-column>
 
         <el-table-column align="center" label="状态" min-width="70">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-switch
               :model-value="!scope.row.forbid"
               active-color="#13ce66"
@@ -155,7 +158,7 @@
           width="160"
         ></el-table-column>
         <el-table-column align="center" label="备注" min-width="50">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.remark }}</span>
           </template>
         </el-table-column>
@@ -165,7 +168,7 @@
           label="操作"
           min-width="50"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-button-group>
               <el-button
                 type="warning"
@@ -178,9 +181,9 @@
                 :hideIcon="true"
                 title="确定删除此用户(只能删除非管理员用户)"
               >
-                <el-button slot="reference" type="danger" size="mini"
-                  >删除</el-button
-                >
+                <template v-slot:reference>
+                  <el-button type="danger" size="mini">删除</el-button>
+                </template>
               </el-popconfirm>
             </el-button-group>
           </template>

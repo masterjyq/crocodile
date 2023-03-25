@@ -1,16 +1,18 @@
 <template>
   <div :val="value_">
     <div>
-      <el-radio v-model="type" label="1" size="mini" border
+      <el-radio v-model:value="type" label="1" size="mini" border
         >每{{ lable }}</el-radio
       >
     </div>
     <div>
-      <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
+      <el-radio v-model:value="type" label="2" size="mini" border
+        >周期</el-radio
+      >
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         @change="type = '2'"
-        v-model="cycle.start"
+        v-model:value="cycle.start"
         :min="1"
         :max="59"
         size="mini"
@@ -19,7 +21,7 @@
       <span style="margin-left: 0px; margin-right: 0px">至</span>
       <el-input-number
         @change="type = '2'"
-        v-model="cycle.end"
+        v-model:value="cycle.end"
         :min="2"
         :max="59"
         size="mini"
@@ -28,11 +30,13 @@
       {{ lable }}
     </div>
     <div>
-      <el-radio v-model="type" label="3" size="mini" border>循环</el-radio>
+      <el-radio v-model:value="type" label="3" size="mini" border
+        >循环</el-radio
+      >
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         @change="type = '3'"
-        v-model="loop.start"
+        v-model:value="loop.start"
         :min="0"
         :max="59"
         size="mini"
@@ -43,7 +47,7 @@
       >
       <el-input-number
         @change="type = '3'"
-        v-model="loop.end"
+        v-model:value="loop.end"
         :min="1"
         :max="59"
         size="mini"
@@ -52,8 +56,10 @@
       {{ lable }}执行一次
     </div>
     <div>
-      <el-radio v-model="type" label="4" size="mini" border>指定</el-radio>
-      <el-checkbox-group v-model="appoint" :min="1">
+      <el-radio v-model:value="type" label="4" size="mini" border
+        >指定</el-radio
+      >
+      <el-checkbox-group v-model:value="appoint" :min="1">
         <div v-for="i in 10" :key="i">
           <el-checkbox
             @change="type = '4'"
@@ -69,6 +75,7 @@
 </template>
 
 <script>
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
   props: {
     value: {
@@ -126,7 +133,7 @@ export default {
           result.push('?')
           break
       }
-      this.$emit('input', result.join(''))
+      $emit(this, 'update:value', result.join(''))
       return result.join('')
     },
   },
@@ -190,6 +197,7 @@ export default {
   created() {
     this.updateVal()
   },
+  emits: ['update:value'],
 }
 </script>
 

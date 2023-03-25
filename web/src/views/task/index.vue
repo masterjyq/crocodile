@@ -15,7 +15,7 @@
         <el-form-item label="任务名称" prop="name">
           <el-input
             :disabled="is_change || is_preview"
-            v-model="task.name"
+            v-model:value="task.name"
             placeholder="请输入任务名称(建议任务名称格式为:标签_名字,方便后续搜索查找)"
             clearable
             style="width: 500px"
@@ -31,7 +31,7 @@
           <el-select
             :disabled="is_preview"
             clearable
-            v-model="task.task_type"
+            v-model:value="task.task_type"
             @change="changetaskdata"
           >
             <el-option
@@ -48,7 +48,7 @@
               <el-select
                 :disabled="is_preview"
                 size="mini"
-                v-model="savecode.lang"
+                v-model:value="savecode.lang"
                 @change="changelang"
               >
                 <el-option
@@ -61,7 +61,7 @@
               <div style="margin-top: 5px">
                 <el-card :body-style="{ padding: '0px' }">
                   <editor
-                    v-model="savecode.code"
+                    v-model:value="savecode.code"
                     theme="solarized_dark"
                     :lang="lang[savecode.lang]"
                     height="300"
@@ -93,11 +93,11 @@
                   empty-text="please press add new"
                 >
                   <el-table-column label="Method" min-width="15px;">
-                    <template slot-scope="scope">
+                    <template v-slot="scope">
                       <el-select
                         :disabled="is_preview"
                         size="mini"
-                        v-model="saveapi.method"
+                        v-model:value="saveapi.method"
                         placeholder="请选择"
                       >
                         <el-option
@@ -110,11 +110,11 @@
                     </template>
                   </el-table-column>
                   <el-table-column label="URL" min-width="100px;">
-                    <template slot-scope="scope">
+                    <template v-slot="scope">
                       <el-input
                         :disabled="is_preview"
                         size="mini"
-                        v-model="saveapi.url"
+                        v-model:value="saveapi.url"
                       ></el-input>
                     </template>
                   </el-table-column>
@@ -132,25 +132,25 @@
                     label="Header List"
                     min-width="100px;"
                   >
-                    <template slot-scope="scope">
+                    <template v-slot="scope">
                       <el-input
                         :disabled="is_preview"
                         size="mini"
-                        v-model="headerlist[scope.$index].key"
+                        v-model:value="headerlist[scope.$index].key"
                       ></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column prop="age" min-width="100px;">
-                    <template slot-scope="scope">
+                    <template v-slot="scope">
                       <el-input
                         :disabled="is_preview"
                         size="mini"
-                        v-model="headerlist[scope.$index].value"
+                        v-model:value="headerlist[scope.$index].value"
                       ></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column width="70px;">
-                    <template slot-scope="scope">
+                    <template v-slot="scope">
                       <el-button
                         :disabled="is_preview"
                         size="mini"
@@ -185,12 +185,12 @@
                       label="Content Type"
                       min-width="100px;"
                     >
-                      <template slot-scope="scope">
+                      <template v-slot="scope">
                         <el-select
                           :disabled="is_preview"
                           size="mini"
                           filterable
-                          v-model="content_type"
+                          v-model:value="content_type"
                           @change="edit_header"
                           style="width: 100%"
                         >
@@ -217,25 +217,25 @@
                       label="Form List"
                       min-width="100px;"
                     >
-                      <template slot-scope="scope">
+                      <template v-slot="scope">
                         <el-input
                           :disabled="is_preview"
                           size="mini"
-                          v-model="formlist[scope.$index].key"
+                          v-model:value="formlist[scope.$index].key"
                         ></el-input>
                       </template>
                     </el-table-column>
                     <el-table-column prop="age" min-width="100px;">
-                      <template slot-scope="scope">
+                      <template v-slot="scope">
                         <el-input
                           :disabled="is_preview"
                           size="mini"
-                          v-model="formlist[scope.$index].value"
+                          v-model:value="formlist[scope.$index].value"
                         ></el-input>
                       </template>
                     </el-table-column>
                     <el-table-column width="70px;">
-                      <template slot-scope="scope">
+                      <template v-slot="scope">
                         <el-button
                           :disabled="is_preview"
                           size="mini"
@@ -272,7 +272,7 @@
                       <!-- <div style="margin-top:5px;"> -->
                       <el-card :body-style="{ padding: '0px' }">
                         <editor
-                          v-model="jsonplayload"
+                          v-model:value="jsonplayload"
                           theme="solarized_dark"
                           lang="json"
                           height="300"
@@ -298,7 +298,7 @@
                 :disabled="is_preview"
                 multiple
                 filterable
-                v-model="task.parent_taskids"
+                v-model:value="task.parent_taskids"
                 :multiple-limit="20"
               >
                 <el-option
@@ -318,7 +318,7 @@
             >
               <el-select
                 :disabled="is_preview"
-                v-model="task.parent_runparallel"
+                v-model:value="task.parent_runparallel"
               >
                 <el-option
                   v-for="item in parallelrun"
@@ -337,7 +337,7 @@
                 :disabled="is_preview"
                 multiple
                 filterable
-                v-model="task.child_taskids"
+                v-model:value="task.child_taskids"
                 multiple-limit="20"
               >
                 <el-option
@@ -357,7 +357,7 @@
             >
               <el-select
                 :disabled="is_preview"
-                v-model="task.child_runparallel"
+                v-model:value="task.child_runparallel"
               >
                 <el-option
                   v-for="item in parallelrun"
@@ -374,13 +374,20 @@
             <el-input
               :disabled="is_preview"
               clearable
-              v-model="task.cronexpr"
+              v-model:value="task.cronexpr"
               placeholder="请输入Cron表达式"
               style="width: 500px"
             >
-              <template slot="append">
-                <el-popover placement="top" width="700" v-model="cronPopover">
-                  <cron v-show="cronPopover" v-model="cronExpression"></cron>
+              <template v-slot:append>
+                <el-popover
+                  placement="top"
+                  width="700"
+                  v-model:value="cronPopover"
+                >
+                  <cron
+                    v-show="cronPopover"
+                    v-model:value="cronExpression"
+                  ></cron>
                   <div style="text-align: center; margin: 0">
                     <el-button type="primary" size="medium" @click="changeCron"
                       >确定</el-button
@@ -392,9 +399,9 @@
                       >取消</el-button
                     >
                   </div>
-                  <el-button :disabled="is_preview" slot="reference"
-                    >编辑</el-button
-                  >
+                  <template v-slot:reference>
+                    <el-button :disabled="is_preview">编辑</el-button>
+                  </template>
                 </el-popover>
               </template>
             </el-input>
@@ -403,7 +410,7 @@
         <el-form-item v-if="is_change" label="调度状态" prop="run">
           <el-switch
             :disabled="is_preview"
-            v-model="task.run"
+            v-model:value="task.run"
             active-text="正常调度"
             inactive-text="停止调度"
           ></el-switch>
@@ -412,13 +419,13 @@
           <el-input-number
             :disabled="is_preview"
             controls-position="right"
-            v-model="task.timeout"
+            v-model:value="task.timeout"
             :min="-1"
             label="超时时间"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="路由策略" prop="route_policy">
-          <el-select :disabled="is_preview" v-model="task.route_policy">
+          <el-select :disabled="is_preview" v-model:value="task.route_policy">
             <el-option
               v-for="item in route_policyoption"
               :key="item.label"
@@ -428,7 +435,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="报警策略" prop="alarm_status">
-          <el-select :disabled="is_preview" v-model="task.alarm_status">
+          <el-select :disabled="is_preview" v-model:value="task.alarm_status">
             <el-option
               v-for="item in alarm_statusoption"
               :key="item.value"
@@ -442,7 +449,7 @@
             :disabled="is_preview"
             multiple
             filterable
-            v-model="task.alarm_userids"
+            v-model:value="task.alarm_userids"
             multiple-limit="10"
           >
             <el-option
@@ -457,7 +464,7 @@
           <el-select
             :disabled="is_preview"
             filterable
-            v-model="task.host_groupid"
+            v-model:value="task.host_groupid"
           >
             <el-option
               v-for="item in hostgroupselect"
@@ -471,7 +478,7 @@
           <el-input
             :disabled="is_preview"
             type="number"
-            v-model="task.expect_code"
+            v-model:value="task.expect_code"
             placeholder="期望返回码"
             clearable
             style="width: 500px"
@@ -482,7 +489,7 @@
             v-if="is_preview"
             :disabled="is_preview"
             type="textarea"
-            v-model="task.expect_content"
+            v-model:value="task.expect_content"
             placeholder
             clearable
             style="width: 500px"
@@ -490,7 +497,7 @@
           <el-input
             v-else
             type="textarea"
-            v-model="task.expect_content"
+            v-model:value="task.expect_content"
             placeholder="期望返回内容"
             clearable
             style="width: 500px"
@@ -501,7 +508,7 @@
             v-if="is_preview"
             :disabled="is_preview"
             type="textarea"
-            v-model="task.remark"
+            v-model:value="task.remark"
             placeholder
             clearable
             style="width: 500px"
@@ -511,7 +518,7 @@
           <el-input
             v-else
             type="textarea"
-            v-model="task.remark"
+            v-model:value="task.remark"
             placeholder="请输入备注"
             clearable
             style="width: 500px"
@@ -522,14 +529,14 @@
         <el-form-item v-if="is_preview" label="创建时间">
           <el-input
             :disabled="is_preview"
-            v-model="taskcreatetime"
+            v-model:value="taskcreatetime"
             clearable
           ></el-input>
         </el-form-item>
         <el-form-item v-if="is_preview" label="更新时间">
           <el-input
             :disabled="is_preview"
-            v-model="taskupdatetime"
+            v-model:value="taskupdatetime"
             clearable
           ></el-input>
         </el-form-item>
@@ -588,32 +595,32 @@
           style="width: 100%"
         >
           <el-table-column align="center" label="任务名称">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="CronExpr">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <span>{{ scope.row.cronexpr }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="调度时间">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <span>{{ scope.row.start_timestr }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="运行时长">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <span>{{ scope.row.run_time / 1000 }}秒</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="触发方式">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <span>{{ scope.row.triggerstr }}</span>
             </template>
           </el-table-column>
           <el-table-column fixed="right" align="center" label="操作">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <el-button-group>
                 <el-button
                   type="warning"
@@ -626,9 +633,9 @@
                   :hideIcon="true"
                   title="确定终止任务?"
                 >
-                  <el-button slot="reference" type="danger" size="mini"
-                    >终止任务</el-button
-                  >
+                  <template v-slot:reference>
+                    <el-button type="danger" size="mini">终止任务</el-button>
+                  </template>
                 </el-popconfirm>
               </el-button-group>
             </template>
@@ -645,7 +652,7 @@
         </div>
         <el-dialog
           :title="diarealtasktitle"
-          :visible.sync="diarealogVisible"
+          v-model:visible="diarealogVisible"
           center
           width="80%"
           @close="startclose"
@@ -672,7 +679,7 @@
               <el-card :body-style="{ padding: '0px' }">
                 <editor
                   v-if="realtasklog != ''"
-                  v-model="realtasklog"
+                  v-model:value="realtasklog"
                   theme="solarized_dark"
                   lang="text"
                   height="500"
@@ -697,9 +704,9 @@
         <el-form :inline="true" label-width="80px">
           <el-form-item label="任务名称">
             <el-input
-              v-model="query.psname"
+              v-model:value="query.psname"
               size="small"
-              @keyup.enter.native="getalltask"
+              @keyup.enter="getalltask"
               placeholder="前置匹配模糊搜索"
               style="width: 200px; margin-right: 1px"
             ></el-input>
@@ -782,12 +789,12 @@
           label="任务名称"
           min-width="100"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="任务类型" width="150">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span v-if="scope.row.task_type == 1">
               <el-tag size="small" type="warning">{{
                 scope.row.task_typedesc
@@ -807,18 +814,18 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="路由策略" width="80">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.route_policydesc }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="CronExpr" min-width="100">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.cronexpr }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="调度状态" width="80">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-tag v-if="scope.row.run" size="mini" type="success"
               >Normal</el-tag
             >
@@ -827,36 +834,36 @@
         </el-table-column>
 
         <el-table-column align="center" label="超时(s)" width="70">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span v-if="scope.row.timeout === -1">-</span>
             <span v-else>{{ scope.row.timeout }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="主机组" min-width="100">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.host_group }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="报警策略" min-width="70">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.alarm_statusdesc }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="创建人" width="80">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.create_by }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="备注" min-width="70">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <span>{{ scope.row.remark }}</span>
           </template>
         </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="130">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-button-group>
               <el-button
                 type="danger"
@@ -887,9 +894,9 @@
                 :hideIcon="true"
                 title="删除任务后对应的任务日志也会被删除，确定删除任务?"
               >
-                <el-button slot="reference" type="danger" size="mini"
-                  >删除</el-button
-                >
+                <template v-slot:reference>
+                  <el-button type="danger" size="mini">删除</el-button>
+                </template>
               </el-popconfirm>
             </el-button-group>
             <br />
@@ -911,9 +918,9 @@
                 :hideIcon="true"
                 title="立即运行任务?"
               >
-                <el-button type="primary" slot="reference" size="mini"
-                  >运行</el-button
-                >
+                <template v-slot:reference>
+                  <el-button type="primary" size="mini">运行</el-button>
+                </template>
               </el-popconfirm>
             </el-button-group>
           </template>
@@ -931,11 +938,11 @@
       <el-dialog
         :title="clonediatitle"
         center
-        :visible.sync="clonevisible"
+        v-model:visible="clonevisible"
         width="20%"
       >
         <el-input
-          v-model="clonenewname"
+          v-model:value="clonenewname"
           size="mini"
           placeholder="请输入新的任务名称"
           style="width: 100%"
@@ -1280,6 +1287,8 @@ console.log("run nodejs")`,
       immediate: true,
     },
     diarealogVisible: {
+      deep: true,
+
       handler(newv, oldv) {
         if (newv === false && this.tlsocket != null) {
           console.log('start close socket')
@@ -1752,8 +1761,7 @@ console.log("run nodejs")`,
   text-align: left;
   color: #909399;
   font-size: 16px;
-  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif';
-  // margin-bottom: 6px;
+  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif'; /*// margin-bottom: 6px;*/
   font-weight: 700;
 }
 </style>

@@ -1,17 +1,23 @@
 <template lang="html">
   <div :val="value_">
     <div>
-      <el-radio v-model="type" label="1" size="mini" border>每年</el-radio>
+      <el-radio v-model:value="type" label="1" size="mini" border
+        >每年</el-radio
+      >
     </div>
     <div>
-      <el-radio v-model="type" label="5" size="mini" border>不指定</el-radio>
+      <el-radio v-model:value="type" label="5" size="mini" border
+        >不指定</el-radio
+      >
     </div>
     <div>
-      <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
+      <el-radio v-model:value="type" label="2" size="mini" border
+        >周期</el-radio
+      >
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         @change="type = '2'"
-        v-model="cycle.start"
+        v-model:value="cycle.start"
         :min="2000"
         size="mini"
         style="width: 100px"
@@ -19,7 +25,7 @@
       <span style="margin-left: 0px; margin-right: 0px">至</span>
       <el-input-number
         @change="type = '2'"
-        v-model="cycle.end"
+        v-model:value="cycle.end"
         :min="2000"
         size="mini"
         style="width: 100px"
@@ -30,6 +36,7 @@
 </template>
 
 <script>
+import { $on, $off, $once, $emit } from '../../utils/gogocodeTransfer'
 export default {
   props: {
     value: {
@@ -84,7 +91,7 @@ export default {
           result.push('?')
           break
       }
-      this.$emit('input', result.join(''))
+      $emit(this, 'update:value', result.join(''))
       return result.join('')
     },
   },
@@ -142,6 +149,7 @@ export default {
   created() {
     this.updateVal()
   },
+  emits: ['update:value'],
 }
 </script>
 

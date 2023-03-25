@@ -27,7 +27,7 @@
           min-width="60"
         ></el-table-column>
         <el-table-column align="center" label="状态" min-width="70">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-tag type="success" size="mini" v-if="scope.row.online"
               >Online</el-tag
             >
@@ -35,7 +35,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="暂停" min-width="80">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-tag v-if="scope.row.stop" size="mini" type="danger"
               >Stop</el-tag
             >
@@ -49,7 +49,7 @@
           min-width="60"
         ></el-table-column>
         <el-table-column align="center" label="操作" min-width="60">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-button-group>
               <el-tooltip
                 v-if="scope.row.stop"
@@ -84,9 +84,9 @@
                 :hideIcon="true"
                 title="删除此主机?"
               >
-                <el-button type="danger" slot="reference" size="mini"
-                  >删除</el-button
-                >
+                <template v-slot:reference>
+                  <el-button type="danger" size="mini">删除</el-button>
+                </template>
               </el-popconfirm>
             </el-button-group>
           </template>

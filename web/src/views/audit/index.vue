@@ -8,7 +8,7 @@
           <el-input
             size="mini"
             @keyup.enter="startgetoperatelog"
-            v-model:value="operatequery.username"
+            v-model="operatequery.username"
           ></el-input>
         </el-form-item>
         <el-form-item label="操作类型">
@@ -16,7 +16,7 @@
             size="small"
             filterable
             clearable
-            v-model:value="operatequery.method"
+            v-model="operatequery.method"
             @change="startgetoperatelog"
           >
             <el-option
@@ -32,7 +32,7 @@
             size="small"
             filterable
             clearable
-            v-model:value="operatequery.module"
+            v-model="operatequery.module"
             @change="startgetoperatelog"
           >
             <el-option
@@ -138,12 +138,7 @@
       ></el-pagination>
     </div>
 
-    <el-dialog
-      title="操作详情"
-      v-model:visible="diaogVisible"
-      center
-      width="60%"
-    >
+    <el-dialog title="操作详情" v-model="diaogVisible" center width="60%">
       <el-table
         v-loading="listLoading"
         :data="detaildata"

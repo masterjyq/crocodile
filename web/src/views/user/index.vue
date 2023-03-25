@@ -15,7 +15,7 @@
         <el-form-item label="用户名" prop="name">
           <el-input
             :disabled="is_change"
-            v-model:value="user.name"
+            v-model="user.name"
             placeholder="请输入用户名"
             clearable
             style="width: 500px"
@@ -24,7 +24,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="用户类型" prop="role">
-          <el-select v-model:value="user.role">
+          <el-select v-model="user.role">
             <el-option
               v-for="item in roleoptions"
               :key="item.label"
@@ -35,17 +35,14 @@
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-tooltip content="修改密码" placement="top">
-            <el-switch
-              v-if="!is_create"
-              v-model:value="changepasswd"
-            ></el-switch>
+            <el-switch v-if="!is_create" v-model="changepasswd"></el-switch>
           </el-tooltip>
           <span v-if="changepasswd">
             <br />
           </span>
           <el-input
             v-if="changepasswd || is_create"
-            v-model:value="password1"
+            v-model="password1"
             type="password"
             placeholder="请输入密码"
             clearable
@@ -57,14 +54,14 @@
           <el-input
             v-if="changepasswd || is_create"
             type="password"
-            v-model:value="password2"
+            v-model="password2"
             placeholder="请再次输入密码"
             clearable
             style="width: 500px"
           ></el-input>
         </el-form-item>
         <el-form-item v-if="is_change" label="状态" prop="forbid">
-          <el-select v-model:value="user.forbid">
+          <el-select v-model="user.forbid">
             <el-option
               v-for="item in forbidoptions"
               :key="item.label"
@@ -76,7 +73,7 @@
         <el-form-item label="备注" prop="remark">
           <el-input
             type="textarea"
-            v-model:value="user.remark"
+            v-model="user.remark"
             placeholder="请输入任务备注"
             clearable
             style="width: 500px"

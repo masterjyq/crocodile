@@ -2,14 +2,14 @@
   <div class="app-container">
     <div style="margin-left: 25px; margin-right: 80px">
       <!-- <el-tabs v-model="activename" @tab-click="handleClick">
-            <el-tab-pane name="setting">
-              <span slot="label">
-                <svg-icon icon-class="usersetting" />设置
-          </span>-->
+              <el-tab-pane name="setting">
+                <span slot="label">
+                  <svg-icon icon-class="usersetting" />设置
+            </span>-->
       <el-form label-position="right" label-width="80px" :model="userinfo">
         <el-form-item label="修改密码">
           <el-tooltip content="修改密码" placement="top">
-            <el-switch v-model:value="changepasswd"></el-switch>
+            <el-switch v-model="changepasswd"></el-switch>
           </el-tooltip>
 
           <el-form
@@ -22,7 +22,7 @@
             <el-form-item prop="password1">
               <el-input
                 type="password"
-                v-model:value="pass.password1"
+                v-model="pass.password1"
                 size="mini"
                 clearable
                 placeholder="请输入密码"
@@ -32,7 +32,7 @@
             <el-form-item prop="password2">
               <el-input
                 type="password"
-                v-model:value="pass.password2"
+                v-model="pass.password2"
                 size="mini"
                 clearable
                 placeholder="请再次输入密码"
@@ -42,30 +42,30 @@
           </el-form>
 
           <!-- <el-input
-                v-if="changepasswd"
-                type="password"
-                v-model="password1"
-                size="mini"
-                clearable
-                placeholder="请输入密码"
-                style="width: 300px;"
-              ></el-input>
-              <span v-if="changepasswd">
-                <br />
-              </span>
-              <el-input
-                type="password"
-                v-if="changepasswd"
-                v-model="password2"
-                size="mini"
-                clearable
-                placeholder="请再次输入密码"
-                style="width: 300px;"
-              ></el-input>-->
+                  v-if="changepasswd"
+                  type="password"
+                  v-model="password1"
+                  size="mini"
+                  clearable
+                  placeholder="请输入密码"
+                  style="width: 300px;"
+                ></el-input>
+                <span v-if="changepasswd">
+                  <br />
+                </span>
+                <el-input
+                  type="password"
+                  v-if="changepasswd"
+                  v-model="password2"
+                  size="mini"
+                  clearable
+                  placeholder="请再次输入密码"
+                  style="width: 300px;"
+                ></el-input>-->
         </el-form-item>
         <el-form-item label="用户名">
           <el-input
-            v-model:value="userinfo.name"
+            v-model="userinfo.name"
             size="mini"
             style="width: 300px"
           ></el-input>
@@ -73,7 +73,7 @@
         <el-form-item label="邮箱">
           <el-input
             :disabled="!alarmstatus.email"
-            v-model:value="userinfo.email"
+            v-model="userinfo.email"
             size="mini"
             style="width: 300px"
           ></el-input>
@@ -81,7 +81,7 @@
         <el-form-item label="WeChat">
           <el-input
             :disabled="!alarmstatus.wechat"
-            v-model:value="userinfo.wechat"
+            v-model="userinfo.wechat"
             size="mini"
             style="width: 300px"
           ></el-input>
@@ -89,7 +89,7 @@
         <el-form-item label="钉钉">
           <el-input
             :disabled="!alarmstatus.dingphone"
-            v-model:value="userinfo.dingphone"
+            v-model="userinfo.dingphone"
             size="mini"
             style="width: 300px"
           ></el-input>
@@ -97,7 +97,7 @@
         <el-form-item label="Telegram">
           <el-input
             :disabled="!alarmstatus.telegram"
-            v-model:value="userinfo.telegram"
+            v-model="userinfo.telegram"
             size="mini"
             style="width: 300px"
           ></el-input>
@@ -105,7 +105,7 @@
         <el-form-item label="备注">
           <el-input
             type="textarea"
-            v-model:value="userinfo.remark"
+            v-model="userinfo.remark"
             size="mini"
             style="width: 300px"
             maxlength="100"

@@ -1,39 +1,24 @@
 <template>
   <div :val="value_">
     <div>
-      <el-radio
-        :disabled="disable"
-        v-model:value="type"
-        label="1"
-        size="mini"
-        border
+      <el-radio :disabled="disable" v-model="type" label="1" size="mini" border
         >每日</el-radio
       >
     </div>
     <div>
-      <el-radio
-        :disabled="disable"
-        v-model:value="type"
-        label="5"
-        size="mini"
-        border
+      <el-radio :disabled="disable" v-model="type" label="5" size="mini" border
         >不指定</el-radio
       >
     </div>
     <div>
-      <el-radio
-        :disabled="disable"
-        v-model:value="type"
-        label="2"
-        size="mini"
-        border
+      <el-radio :disabled="disable" v-model="type" label="2" size="mini" border
         >周期</el-radio
       >
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         :disabled="disable"
         @change="type = '2'"
-        v-model:value="cycle.start"
+        v-model="cycle.start"
         :min="1"
         :max="31"
         size="mini"
@@ -43,7 +28,7 @@
       <el-input-number
         :disabled="disable"
         @change="type = '2'"
-        v-model:value="cycle.end"
+        v-model="cycle.end"
         :min="2"
         :max="31"
         size="mini"
@@ -52,19 +37,14 @@
       >日
     </div>
     <div>
-      <el-radio
-        :disabled="disable"
-        v-model:value="type"
-        label="3"
-        size="mini"
-        border
+      <el-radio :disabled="disable" v-model="type" label="3" size="mini" border
         >循环</el-radio
       >
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         :disabled="disable"
         @change="type = '3'"
-        v-model:value="loop.start"
+        v-model="loop.start"
         :min="1"
         :max="31"
         size="mini"
@@ -74,7 +54,7 @@
       <el-input-number
         :disabled="disable"
         @change="type = '3'"
-        v-model:value="loop.end"
+        v-model="loop.end"
         :min="1"
         :max="31"
         size="mini"
@@ -83,19 +63,14 @@
       >日执行一次
     </div>
     <div>
-      <el-radio
-        :disabled="disable"
-        v-model:value="type"
-        label="8"
-        size="mini"
-        border
+      <el-radio :disabled="disable" v-model="type" label="8" size="mini" border
         >工作日</el-radio
       >
       <span style="margin-left: 0px; margin-right: 0px">本月</span>
       <el-input-number
         :disabled="disable"
         @change="type = '8'"
-        v-model:value="work"
+        v-model="work"
         :min="1"
         :max="7"
         size="mini"
@@ -104,25 +79,15 @@
       >号，最近的工作日
     </div>
     <div>
-      <el-radio
-        :disabled="disable"
-        v-model:value="type"
-        label="6"
-        size="mini"
-        border
+      <el-radio :disabled="disable" v-model="type" label="6" size="mini" border
         >本月最后一天</el-radio
       >
     </div>
     <div>
-      <el-radio
-        :disabled="disable"
-        v-model:value="type"
-        label="4"
-        size="mini"
-        border
+      <el-radio :disabled="disable" v-model="type" label="4" size="mini" border
         >指定</el-radio
       >
-      <el-checkbox-group v-model:value="appoint" :min="1">
+      <el-checkbox-group v-model="appoint" :min="1">
         <div v-for="i in 6" :key="i">
           <template v-for="j in 6">
             <el-checkbox

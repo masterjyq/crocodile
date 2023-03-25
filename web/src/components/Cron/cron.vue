@@ -2,7 +2,7 @@
   <div class="cron" :val="value_">
     <el-row>
       <el-col :span="17">
-        <el-tabs v-model:value="activeName">
+        <el-tabs v-model="activeName">
           <el-tab-pane label="秒" name="s">
             <second-and-minute
               v-model:value="sVal"

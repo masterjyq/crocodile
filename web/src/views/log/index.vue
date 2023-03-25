@@ -9,13 +9,13 @@
             size="mini"
             @keyup.enter="startgettasklog"
             clearable
-            v-model:value="logquery.name"
+            v-model="logquery.name"
           ></el-input>
         </el-form-item>
         <el-form-item label="执行结果">
           <el-select
             size="mini"
-            v-model:value="logquery.status"
+            v-model="logquery.status"
             @change="startgettasklog"
           >
             <el-option
@@ -41,16 +41,11 @@
           </el-tooltip>
         </el-form-item>
       </el-form>
-      <el-dialog
-        title="清理日志"
-        center
-        v-model:visible="cleanlogvisible"
-        width="25%"
-      >
+      <el-dialog title="清理日志" center v-model="cleanlogvisible" width="25%">
         <el-form :rules="rules" size="mini" :model="cleanlog" ref="cleanlog">
           <el-form-item label="任务名称" prop="name">
             <el-input
-              v-model:value="cleanlog.name"
+              v-model="cleanlog.name"
               size="mini"
               placeholder="请输入需要清理的任务名称"
               style="width: 70%"
@@ -61,7 +56,7 @@
           <el-form-item label="清理时间" prop="cleanpredat">
             <el-select
               size="mini"
-              v-model:value="cleanlog.cleanpredat"
+              v-model="cleanlog.cleanpredat"
               style="width: 70%"
             >
               <el-option
@@ -199,12 +194,7 @@
       ></el-pagination>
     </div>
 
-    <el-dialog
-      :title="diatasktitle"
-      v-model:visible="diaogVisible"
-      center
-      width="70%"
-    >
+    <el-dialog :title="diatasktitle" v-model="diaogVisible" center width="70%">
       <el-container>
         <el-aside width="140px">
           <el-tree

@@ -15,7 +15,7 @@
         <el-form-item label="主机组名称" prop="name">
           <el-input
             :disabled="is_change"
-            v-model:value="hostgroup.name"
+            v-model="hostgroup.name"
             placeholder="请输入主机组名称"
             clearable
             style="width: 500px"
@@ -27,7 +27,7 @@
           <el-select
             multiple
             filterable
-            v-model:value="hostgroup.addrs"
+            v-model="hostgroup.addrs"
             style="width: 500px"
           >
             <el-option
@@ -38,8 +38,8 @@
             >
               <span style="float: left">{{ item.label }}</span>
               <!-- <span
-                    style="float: right; color: #8492a6; font-size: 13px;margin-right: 30px;"
-                  >{{ item.online }}</span>-->
+                      style="float: right; color: #8492a6; font-size: 13px;margin-right: 30px;"
+                    >{{ item.online }}</span>-->
               <span
                 style="
                   float: right;
@@ -61,7 +61,7 @@
         <el-form-item label="备注" prop="remark">
           <el-input
             type="textarea"
-            v-model:value="hostgroup.remark"
+            v-model="hostgroup.remark"
             placeholder="请输入任务备注"
             clearable
             style="width: 500px"

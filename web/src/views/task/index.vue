@@ -15,7 +15,7 @@
         <el-form-item label="任务名称" prop="name">
           <el-input
             :disabled="is_change || is_preview"
-            v-model:value="task.name"
+            v-model="task.name"
             placeholder="请输入任务名称(建议任务名称格式为:标签_名字,方便后续搜索查找)"
             clearable
             style="width: 500px"
@@ -31,7 +31,7 @@
           <el-select
             :disabled="is_preview"
             clearable
-            v-model:value="task.task_type"
+            v-model="task.task_type"
             @change="changetaskdata"
           >
             <el-option
@@ -48,7 +48,7 @@
               <el-select
                 :disabled="is_preview"
                 size="mini"
-                v-model:value="savecode.lang"
+                v-model="savecode.lang"
                 @change="changelang"
               >
                 <el-option
@@ -97,7 +97,7 @@
                       <el-select
                         :disabled="is_preview"
                         size="mini"
-                        v-model:value="saveapi.method"
+                        v-model="saveapi.method"
                         placeholder="请选择"
                       >
                         <el-option
@@ -114,7 +114,7 @@
                       <el-input
                         :disabled="is_preview"
                         size="mini"
-                        v-model:value="saveapi.url"
+                        v-model="saveapi.url"
                       ></el-input>
                     </template>
                   </el-table-column>
@@ -136,7 +136,7 @@
                       <el-input
                         :disabled="is_preview"
                         size="mini"
-                        v-model:value="headerlist[scope.$index].key"
+                        v-model="headerlist[scope.$index].key"
                       ></el-input>
                     </template>
                   </el-table-column>
@@ -145,7 +145,7 @@
                       <el-input
                         :disabled="is_preview"
                         size="mini"
-                        v-model:value="headerlist[scope.$index].value"
+                        v-model="headerlist[scope.$index].value"
                       ></el-input>
                     </template>
                   </el-table-column>
@@ -190,7 +190,7 @@
                           :disabled="is_preview"
                           size="mini"
                           filterable
-                          v-model:value="content_type"
+                          v-model="content_type"
                           @change="edit_header"
                           style="width: 100%"
                         >
@@ -221,7 +221,7 @@
                         <el-input
                           :disabled="is_preview"
                           size="mini"
-                          v-model:value="formlist[scope.$index].key"
+                          v-model="formlist[scope.$index].key"
                         ></el-input>
                       </template>
                     </el-table-column>
@@ -230,7 +230,7 @@
                         <el-input
                           :disabled="is_preview"
                           size="mini"
-                          v-model:value="formlist[scope.$index].value"
+                          v-model="formlist[scope.$index].value"
                         ></el-input>
                       </template>
                     </el-table-column>
@@ -298,7 +298,7 @@
                 :disabled="is_preview"
                 multiple
                 filterable
-                v-model:value="task.parent_taskids"
+                v-model="task.parent_taskids"
                 :multiple-limit="20"
               >
                 <el-option
@@ -318,7 +318,7 @@
             >
               <el-select
                 :disabled="is_preview"
-                v-model:value="task.parent_runparallel"
+                v-model="task.parent_runparallel"
               >
                 <el-option
                   v-for="item in parallelrun"
@@ -337,7 +337,7 @@
                 :disabled="is_preview"
                 multiple
                 filterable
-                v-model:value="task.child_taskids"
+                v-model="task.child_taskids"
                 multiple-limit="20"
               >
                 <el-option
@@ -357,7 +357,7 @@
             >
               <el-select
                 :disabled="is_preview"
-                v-model:value="task.child_runparallel"
+                v-model="task.child_runparallel"
               >
                 <el-option
                   v-for="item in parallelrun"
@@ -374,16 +374,12 @@
             <el-input
               :disabled="is_preview"
               clearable
-              v-model:value="task.cronexpr"
+              v-model="task.cronexpr"
               placeholder="请输入Cron表达式"
               style="width: 500px"
             >
               <template v-slot:append>
-                <el-popover
-                  placement="top"
-                  width="700"
-                  v-model:value="cronPopover"
-                >
+                <el-popover placement="top" width="700" v-model="cronPopover">
                   <cron
                     v-show="cronPopover"
                     v-model:value="cronExpression"
@@ -410,7 +406,7 @@
         <el-form-item v-if="is_change" label="调度状态" prop="run">
           <el-switch
             :disabled="is_preview"
-            v-model:value="task.run"
+            v-model="task.run"
             active-text="正常调度"
             inactive-text="停止调度"
           ></el-switch>
@@ -419,13 +415,13 @@
           <el-input-number
             :disabled="is_preview"
             controls-position="right"
-            v-model:value="task.timeout"
+            v-model="task.timeout"
             :min="-1"
             label="超时时间"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="路由策略" prop="route_policy">
-          <el-select :disabled="is_preview" v-model:value="task.route_policy">
+          <el-select :disabled="is_preview" v-model="task.route_policy">
             <el-option
               v-for="item in route_policyoption"
               :key="item.label"
@@ -435,7 +431,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="报警策略" prop="alarm_status">
-          <el-select :disabled="is_preview" v-model:value="task.alarm_status">
+          <el-select :disabled="is_preview" v-model="task.alarm_status">
             <el-option
               v-for="item in alarm_statusoption"
               :key="item.value"
@@ -449,7 +445,7 @@
             :disabled="is_preview"
             multiple
             filterable
-            v-model:value="task.alarm_userids"
+            v-model="task.alarm_userids"
             multiple-limit="10"
           >
             <el-option
@@ -464,7 +460,7 @@
           <el-select
             :disabled="is_preview"
             filterable
-            v-model:value="task.host_groupid"
+            v-model="task.host_groupid"
           >
             <el-option
               v-for="item in hostgroupselect"
@@ -478,7 +474,7 @@
           <el-input
             :disabled="is_preview"
             type="number"
-            v-model:value="task.expect_code"
+            v-model="task.expect_code"
             placeholder="期望返回码"
             clearable
             style="width: 500px"
@@ -489,7 +485,7 @@
             v-if="is_preview"
             :disabled="is_preview"
             type="textarea"
-            v-model:value="task.expect_content"
+            v-model="task.expect_content"
             placeholder
             clearable
             style="width: 500px"
@@ -497,7 +493,7 @@
           <el-input
             v-else
             type="textarea"
-            v-model:value="task.expect_content"
+            v-model="task.expect_content"
             placeholder="期望返回内容"
             clearable
             style="width: 500px"
@@ -508,7 +504,7 @@
             v-if="is_preview"
             :disabled="is_preview"
             type="textarea"
-            v-model:value="task.remark"
+            v-model="task.remark"
             placeholder
             clearable
             style="width: 500px"
@@ -518,7 +514,7 @@
           <el-input
             v-else
             type="textarea"
-            v-model:value="task.remark"
+            v-model="task.remark"
             placeholder="请输入备注"
             clearable
             style="width: 500px"
@@ -529,14 +525,14 @@
         <el-form-item v-if="is_preview" label="创建时间">
           <el-input
             :disabled="is_preview"
-            v-model:value="taskcreatetime"
+            v-model="taskcreatetime"
             clearable
           ></el-input>
         </el-form-item>
         <el-form-item v-if="is_preview" label="更新时间">
           <el-input
             :disabled="is_preview"
-            v-model:value="taskupdatetime"
+            v-model="taskupdatetime"
             clearable
           ></el-input>
         </el-form-item>
@@ -652,7 +648,7 @@
         </div>
         <el-dialog
           :title="diarealtasktitle"
-          v-model:visible="diarealogVisible"
+          v-model="diarealogVisible"
           center
           width="80%"
           @close="startclose"
@@ -704,7 +700,7 @@
         <el-form :inline="true" label-width="80px">
           <el-form-item label="任务名称">
             <el-input
-              v-model:value="query.psname"
+              v-model="query.psname"
               size="small"
               @keyup.enter="getalltask"
               placeholder="前置匹配模糊搜索"
@@ -938,11 +934,11 @@
       <el-dialog
         :title="clonediatitle"
         center
-        v-model:visible="clonevisible"
+        v-model="clonevisible"
         width="20%"
       >
         <el-input
-          v-model:value="clonenewname"
+          v-model="clonenewname"
           size="mini"
           placeholder="请输入新的任务名称"
           style="width: 100%"

@@ -1,23 +1,17 @@
 <template lang="html">
   <div :val="value_">
     <div>
-      <el-radio v-model:value="type" label="1" size="mini" border
-        >每月</el-radio
-      >
+      <el-radio v-model="type" label="1" size="mini" border>每月</el-radio>
     </div>
     <div>
-      <el-radio v-model:value="type" label="5" size="mini" border
-        >不指定</el-radio
-      >
+      <el-radio v-model="type" label="5" size="mini" border>不指定</el-radio>
     </div>
     <div>
-      <el-radio v-model:value="type" label="2" size="mini" border
-        >周期</el-radio
-      >
+      <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         @change="type = '2'"
-        v-model:value="cycle.start"
+        v-model="cycle.start"
         :min="1"
         :max="12"
         size="mini"
@@ -26,7 +20,7 @@
       <span style="margin-left: 0px; margin-right: 0px">至</span>
       <el-input-number
         @change="type = '2'"
-        v-model:value="cycle.end"
+        v-model="cycle.end"
         :min="2"
         :max="12"
         size="mini"
@@ -35,13 +29,11 @@
       月
     </div>
     <div>
-      <el-radio v-model:value="type" label="3" size="mini" border
-        >循环</el-radio
-      >
+      <el-radio v-model="type" label="3" size="mini" border>循环</el-radio>
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         @change="type = '3'"
-        v-model:value="loop.start"
+        v-model="loop.start"
         :min="1"
         :max="12"
         size="mini"
@@ -50,7 +42,7 @@
       <span style="margin-left: 0px; margin-right: 0px">月开始，每</span>
       <el-input-number
         @change="type = '3'"
-        v-model:value="loop.end"
+        v-model="loop.end"
         :min="1"
         :max="12"
         size="mini"
@@ -59,10 +51,8 @@
       月执行一次
     </div>
     <div>
-      <el-radio v-model:value="type" label="4" size="mini" border
-        >指定</el-radio
-      >
-      <el-checkbox-group v-model:value="appoint" :min="1">
+      <el-radio v-model="type" label="4" size="mini" border>指定</el-radio>
+      <el-checkbox-group v-model="appoint" :min="1">
         <div v-for="i in 2" :key="i">
           <el-checkbox
             @change="type = '4'"

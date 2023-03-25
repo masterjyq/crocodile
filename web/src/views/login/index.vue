@@ -27,7 +27,7 @@
         </span>
         <el-input
           ref="username"
-          v-model:value="loginForm.username"
+          v-model="loginForm.username"
           placeholder="Username"
           name="username"
           type="text"
@@ -44,7 +44,7 @@
         <el-input
           :key="passwordType"
           ref="password"
-          v-model:value="loginForm.password"
+          v-model="loginForm.password"
           :type="passwordType"
           placeholder="Password"
           name="password"
@@ -52,8 +52,8 @@
           auto-complete="on"
         />
         <!-- <span class="show-pwd" @click="showPwd(passwordType)">
-              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-            </span>-->
+                <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+              </span>-->
       </el-form-item>
       <el-form-item v-show="needinstall">
         <span class="svg-container">
@@ -62,7 +62,7 @@
         <el-input
           :key="passwordType2"
           ref="password"
-          v-model:value="password2"
+          v-model="password2"
           :type="passwordType2"
           placeholder="Password"
           name="password"
@@ -70,8 +70,8 @@
           auto-complete="on"
         />
         <!-- <span class="show-pwd" @click="showPwd(passwordType2)">
-              <svg-icon :icon-class="passwordType2 === 'password' ? 'eye' : 'eye-open'" />
-            </span>-->
+                <svg-icon :icon-class="passwordType2 === 'password' ? 'eye' : 'eye-open'" />
+              </span>-->
       </el-form-item>
       <el-button
         v-if="needinstall"

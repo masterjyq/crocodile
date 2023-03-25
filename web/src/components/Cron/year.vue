@@ -1,23 +1,17 @@
 <template lang="html">
   <div :val="value_">
     <div>
-      <el-radio v-model:value="type" label="1" size="mini" border
-        >每年</el-radio
-      >
+      <el-radio v-model="type" label="1" size="mini" border>每年</el-radio>
     </div>
     <div>
-      <el-radio v-model:value="type" label="5" size="mini" border
-        >不指定</el-radio
-      >
+      <el-radio v-model="type" label="5" size="mini" border>不指定</el-radio>
     </div>
     <div>
-      <el-radio v-model:value="type" label="2" size="mini" border
-        >周期</el-radio
-      >
+      <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
       <span style="margin-left: 0px; margin-right: 0px">从</span>
       <el-input-number
         @change="type = '2'"
-        v-model:value="cycle.start"
+        v-model="cycle.start"
         :min="2000"
         size="mini"
         style="width: 100px"
@@ -25,7 +19,7 @@
       <span style="margin-left: 0px; margin-right: 0px">至</span>
       <el-input-number
         @change="type = '2'"
-        v-model:value="cycle.end"
+        v-model="cycle.end"
         :min="2000"
         size="mini"
         style="width: 100px"

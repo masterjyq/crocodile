@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
-    <div style="height:40px;float:right;margin-left:25px;margin-right:20px">
+    <div
+      style="height: 40px; float: right; margin-left: 25px; margin-right: 20px"
+    >
       <el-form :inline="true" label-width="80px">
         <el-form-item label="操作用户">
           <el-input
@@ -49,9 +51,14 @@
       stripe
       fit
       highlight-current-row
-      style="width: 100%;"
+      style="width: 100%"
     >
-      <el-table-column align="center" fixed="left" label="操作用户" min-width="80">
+      <el-table-column
+        align="center"
+        fixed="left"
+        label="操作用户"
+        min-width="80"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.user_name }}</span>
         </template>
@@ -68,13 +75,19 @@
       <el-table-column align="center" label="操作类型" min-width="100">
         <template slot-scope="scope">
           <span v-if="scope.row.method === 'PUT'">
-            <el-tag type="warning" size="small">{{ operatetype[scope.row.method] }}</el-tag>
+            <el-tag type="warning" size="small">{{
+              operatetype[scope.row.method]
+            }}</el-tag>
           </span>
           <span v-else-if="scope.row.method === 'DELETE'">
-            <el-tag type="danger" size="small">{{ operatetype[scope.row.method] }}</el-tag>
+            <el-tag type="danger" size="small">{{
+              operatetype[scope.row.method]
+            }}</el-tag>
           </span>
           <span v-else-if="scope.row.method === 'POST'">
-            <el-tag type="success" size="small">{{ operatetype[scope.row.method] }}</el-tag>
+            <el-tag type="success" size="small">{{
+              operatetype[scope.row.method]
+            }}</el-tag>
           </span>
           <span v-else>
             <el-tag type="info" size="small">Unknow</el-tag>
@@ -110,11 +123,12 @@
             type="primary"
             size="mini"
             @click="lookdetail(scope.row.columns)"
-          >详情</el-button>
+            >详情</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    <div style="margin-top: 10px;float:right;height: 70px;">
+    <div style="margin-top: 10px; float: right; height: 70px">
       <el-pagination
         :page-size="operatequery.limit"
         @current-change="handleCurrentChangerun"
@@ -133,20 +147,35 @@
         border
         fit
         highlight-current-row
-        style="width: 100%;"
+        style="width: 100%"
       >
-        <el-table-column align="center" fixed="left" label="操作字段" min-width="70">
+        <el-table-column
+          align="center"
+          fixed="left"
+          label="操作字段"
+          min-width="70"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="left" label="旧值" min-width="100">
+        <el-table-column
+          align="center"
+          fixed="left"
+          label="旧值"
+          min-width="100"
+        >
           <template slot-scope="scope">
             <span v-if="scope.row.old_value === null">-</span>
             <span v-else>{{ scope.row.old_value }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="left" label="新值" min-width="100">
+        <el-table-column
+          align="center"
+          fixed="left"
+          label="新值"
+          min-width="100"
+        >
           <template slot-scope="scope">
             <span v-if="scope.row.new_value === null">-</span>
             <span v-else v-text="scope.row.new_value"></span>
@@ -158,81 +187,80 @@
 </template>
 
 <script>
-import { Message } from "element-ui";
-import router from "@/router";
+import { Message } from 'element-ui'
+import router from '@/router'
 
-import { getoperatelog } from "@/api/user";
+import { getoperatelog } from '@/api/user'
 
 export default {
   data() {
     return {
-      diatasktitle: "",
+      diatasktitle: '',
       diaogVisible: false,
-      tasklogtitle: "",
-      tasklog: "",
+      tasklogtitle: '',
+      tasklog: '',
       taskselect: [],
       data: [],
       pagecount: 0,
       detaildata: [],
       listLoading: false,
       operatequery: {
-        username: "",
-        method: "",
-        module: "",
+        username: '',
+        method: '',
+        module: '',
         offset: 0,
-        limit: 15
+        limit: 15,
       },
       operatetype: {
-        PUT: "修改",
-        POST: "创建",
-        DELETE: "删除"
+        PUT: '修改',
+        POST: '创建',
+        DELETE: '删除',
       },
       moduletype: {
-        user: "用户",
-        task: "任务",
-        hostgroup: "主机组",
-        host: "主机"
+        user: '用户',
+        task: '任务',
+        hostgroup: '主机组',
+        host: '主机',
       },
       defaultProps: {
-        children: "children",
-        label: "name"
-      }
-    };
+        children: 'children',
+        label: 'name',
+      },
+    }
   },
 
   created() {
-    this.startgetoperatelog();
+    this.startgetoperatelog()
   },
   methods: {
     getoption(datatype) {
-      var dataoption = [];
-      Object.entries(datatype).map(function(key) {
+      var dataoption = []
+      Object.entries(datatype).map(function (key) {
         dataoption.push({
           value: key[0],
-          label: key[1]
-        });
-      });
+          label: key[1],
+        })
+      })
 
-      return dataoption;
+      return dataoption
     },
     handleCurrentChangerun(page) {
-      this.operatequery.offset = (page - 1) * this.operatequery.limit;
-      this.startgetoperatelog();
+      this.operatequery.offset = (page - 1) * this.operatequery.limit
+      this.startgetoperatelog()
     },
     startgetoperatelog() {
-      getoperatelog(this.operatequery).then(response => {
-        this.data = response.data;
-        this.pagecount = response.count;
-      });
+      getoperatelog(this.operatequery).then((response) => {
+        this.data = response.data
+        this.pagecount = response.count
+      })
     },
     lookdetail(data) {
-      this.diaogVisible = true;
-      this.detaildata = data;
-    }
-  }
-};
+      this.diaogVisible = true
+      this.detaildata = data
+    },
+  },
+}
 </script>
-
 
 <style lang="scss" scoped>
 .el-button--mini,
@@ -260,7 +288,7 @@ export default {
   text-align: left;
   color: #909399;
   font-size: 20px;
-  font-family: "Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif";
+  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif';
   // margin-bottom: 6px;
   font-weight: 700;
 }
@@ -280,5 +308,3 @@ export default {
   color: red;
 }
 </style>
-
-

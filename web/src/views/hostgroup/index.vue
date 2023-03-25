@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
-    <div v-if="is_change || is_create" style="margin-left:25px;margin-right:80px；height:80px">
+    <div
+      v-if="is_change || is_create"
+      style="margin-left:25px;margin-right:80px；height:80px"
+    >
       <el-form
         :model="hostgroup"
         ref="hostgroup"
@@ -15,13 +18,18 @@
             v-model="hostgroup.name"
             placeholder="请输入主机组名称"
             clearable
-            style="width: 500px;"
+            style="width: 500px"
             maxlength="30"
             show-word-limit
           ></el-input>
         </el-form-item>
         <el-form-item label="Worker" prop="task_type" placeholder="请选择主机">
-          <el-select multiple filterable v-model="hostgroup.addrs" style="width: 500px;">
+          <el-select
+            multiple
+            filterable
+            v-model="hostgroup.addrs"
+            style="width: 500px"
+          >
             <el-option
               v-for="item in hostselect"
               :key="item.label"
@@ -32,9 +40,20 @@
               <!-- <span
                 style="float: right; color: #8492a6; font-size: 13px;margin-right: 30px;"
               >{{ item.online }}</span>-->
-              <span style="float: right; color: #8492a6; font-size: 13px;margin-right: 30px;">
-                <el-tag v-if="item.online === 1" size="mini" type="success">Online</el-tag>
-                <el-tag v-if="item.online === -1" size="mini" type="danger">Offline</el-tag>
+              <span
+                style="
+                  float: right;
+                  color: #8492a6;
+                  font-size: 13px;
+                  margin-right: 30px;
+                "
+              >
+                <el-tag v-if="item.online === 1" size="mini" type="success"
+                  >Online</el-tag
+                >
+                <el-tag v-if="item.online === -1" size="mini" type="danger"
+                  >Offline</el-tag
+                >
               </span>
             </el-option>
           </el-select>
@@ -45,21 +64,40 @@
             v-model="hostgroup.remark"
             placeholder="请输入任务备注"
             clearable
-            style="width: 500px;"
+            style="width: 500px"
             maxlength="100"
             show-word-limit
           ></el-input>
         </el-form-item>
       </el-form>
-      <div style="margin-left: 120px;">
-        <el-button size="small" type="primary" @click="submithostgroup('hostgroup')">确 定</el-button>
-        <el-button size="small" @click="is_create = false;is_change = false">取 消</el-button>
+      <div style="margin-left: 120px">
+        <el-button
+          size="small"
+          type="primary"
+          @click="submithostgroup('hostgroup')"
+          >确 定</el-button
+        >
+        <el-button
+          size="small"
+          @click="
+            is_create = false
+            is_change = false
+          "
+          >取 消</el-button
+        >
       </div>
     </div>
     <div v-else>
       <div style="float: right">
-        <el-tooltip class="item" effect="dark" content="新建主机组" placement="top-start">
-          <el-button type="primary" size="small" @click="createhostgrouppre">New</el-button>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="新建主机组"
+          placement="top-start"
+        >
+          <el-button type="primary" size="small" @click="createhostgrouppre"
+            >New</el-button
+          >
         </el-tooltip>
       </div>
       <el-table
@@ -68,9 +106,14 @@
         stripe
         fit
         highlight-current-row
-        style="width: 100%;"
+        style="width: 100%"
       >
-        <el-table-column align="center" fixed="left" label="名称" min-width="100">
+        <el-table-column
+          align="center"
+          fixed="left"
+          label="名称"
+          min-width="100"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
@@ -85,19 +128,39 @@
               @show="gethostdetail(scope.row)"
             >
               <el-table border :data="hghosts">
-                <el-table-column property="addr" label="IP" width="150"></el-table-column>
-                <el-table-column property="hostname" label="主机名" min-width="100"></el-table-column>
-                <el-table-column property="weight" label="权重" width="60"></el-table-column>
-                <el-table-column property="version" label="版本" width="60"></el-table-column>
+                <el-table-column
+                  property="addr"
+                  label="IP"
+                  width="150"
+                ></el-table-column>
+                <el-table-column
+                  property="hostname"
+                  label="主机名"
+                  min-width="100"
+                ></el-table-column>
+                <el-table-column
+                  property="weight"
+                  label="权重"
+                  width="60"
+                ></el-table-column>
+                <el-table-column
+                  property="version"
+                  label="版本"
+                  width="60"
+                ></el-table-column>
                 <el-table-column label="状态" width="70">
                   <template slot-scope="scope">
-                    <el-tag type="success" size="mini" v-if="scope.row.online">Online</el-tag>
+                    <el-tag type="success" size="mini" v-if="scope.row.online"
+                      >Online</el-tag
+                    >
                     <el-tag type="danger" size="mini" v-else>Offline</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column label="暂停" width="80">
                   <template slot-scope="scope">
-                    <el-tag v-if="!scope.row.stop" size="mini" type="success">Normal</el-tag>
+                    <el-tag v-if="!scope.row.stop" size="mini" type="success"
+                      >Normal</el-tag
+                    >
                     <el-tag v-else size="mini" type="danger">Stop</el-tag>
                   </template>
                 </el-table-column>
@@ -121,30 +184,50 @@
             <span>{{ scope.row.create_by }}</span>
           </template>
         </el-table-column>
-        <el-table-column property="create_time" label="创建时间" width="160"></el-table-column>
-        <el-table-column property="update_time" label="修改时间" width="160"></el-table-column>
+        <el-table-column
+          property="create_time"
+          label="创建时间"
+          width="160"
+        ></el-table-column>
+        <el-table-column
+          property="update_time"
+          label="修改时间"
+          width="160"
+        ></el-table-column>
         <el-table-column align="center" label="备注" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.remark }}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作" min-width="80">
+        <el-table-column
+          fixed="right"
+          align="center"
+          label="操作"
+          min-width="80"
+        >
           <template slot-scope="scope">
             <el-button-group>
-              <el-button type="warning" size="mini" @click="changehostgrouppre(scope.row)">修改</el-button>
+              <el-button
+                type="warning"
+                size="mini"
+                @click="changehostgrouppre(scope.row)"
+                >修改</el-button
+              >
               <el-popconfirm
                 :hideIcon="true"
                 title="确定删除主机组?"
                 @onConfirm="deletehostgrouppre(scope.row)"
               >
-                <el-button slot="reference" type="danger" size="mini">删除</el-button>
+                <el-button slot="reference" type="danger" size="mini"
+                  >删除</el-button
+                >
               </el-popconfirm>
               <!-- <el-button type="danger" size="mini" @click="">删除</el-button> -->
             </el-button-group>
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin-top: 10px;float:right;height: 70px;">
+      <div style="margin-top: 10px; float: right; height: 70px">
         <el-pagination
           :page-size="hostgroupquery.limit"
           @current-change="handleCurrentChangerun"
@@ -164,12 +247,12 @@ import {
   createhostgroup,
   deletehostgroup,
   changehostgroup,
-  gethostsbyhgid
-} from "@/api/hostgroup";
+  gethostsbyhgid,
+} from '@/api/hostgroup'
 
-import { getselecthost } from "@/api/host";
+import { getselecthost } from '@/api/host'
 
-import { Message } from "element-ui";
+import { Message } from 'element-ui'
 
 export default {
   data() {
@@ -181,125 +264,127 @@ export default {
       createactuatordialog: false,
       updateactuatordialog: false,
       rules: {
-        name: [{ required: true, message: "请输入主机组名称", trigger: "blur" }]
+        name: [
+          { required: true, message: '请输入主机组名称', trigger: 'blur' },
+        ],
       },
       addips: [],
       arronline: [],
       hostgroupquery: {
         offset: 0,
-        limit: 15
+        limit: 15,
       },
       hostgroup: {
-        id: "",
-        name: "",
+        id: '',
+        name: '',
         addrs: [],
-        remark: ""
+        remark: '',
       },
       hghosts: [],
       is_change: false,
       is_create: false,
-      hostselect: []
-    };
+      hostselect: [],
+    }
   },
   created() {
-    this.getallhostgroup();
+    this.getallhostgroup()
   },
   methods: {
     getallhostgroup() {
-      gethostgroup(this.hostgroupquery).then(resp => {
-        this.data = resp.data;
-        this.pagecount = resp.count;
-      });
+      gethostgroup(this.hostgroupquery).then((resp) => {
+        this.data = resp.data
+        this.pagecount = resp.count
+      })
     },
     createhostgrouppre() {
-      this.startgetselecthost();
+      this.startgetselecthost()
       if (this.hostgroup.name === undefined) {
-        this.hostgroup["name"] = "";
+        this.hostgroup['name'] = ''
       } else {
-        this.hostgroup.name = "";
+        this.hostgroup.name = ''
       }
 
-      this.hostgroup.addrs = "";
-      this.hostgroup.remark = "";
-      this.is_create = true;
+      this.hostgroup.addrs = ''
+      this.hostgroup.remark = ''
+      this.is_create = true
     },
     gethostdetail(hostgroup) {
       var query = {
-        id: hostgroup.id
-      };
-      gethostsbyhgid(query).then(resp => {
-        this.hghosts = resp.data;
-      });
+        id: hostgroup.id,
+      }
+      gethostsbyhgid(query).then((resp) => {
+        this.hghosts = resp.data
+      })
     },
     changehostgrouppre(hostgroup) {
-      this.startgetselecthost();
+      this.startgetselecthost()
       if (this.hostgroup.id === undefined) {
-        this.hostgroup["id"] = hostgroup.id;
+        this.hostgroup['id'] = hostgroup.id
       } else {
-        this.hostgroup.id = hostgroup.id;
+        this.hostgroup.id = hostgroup.id
       }
-      this.hostgroup.name = hostgroup.name;
+      this.hostgroup.name = hostgroup.name
 
-      this.hostgroup.addrs = hostgroup.addrs;
-      this.hostgroup.remark = hostgroup.remark;
-      this.is_change = true;
+      this.hostgroup.addrs = hostgroup.addrs
+      this.hostgroup.remark = hostgroup.remark
+      this.is_change = true
     },
     deletehostgrouppre(hostgroup) {
       var delid = {
-        id: hostgroup.id
-      };
-      deletehostgroup(delid).then(resp => {
+        id: hostgroup.id,
+      }
+      deletehostgroup(delid).then((resp) => {
         if (resp.code === 0) {
-          Message.success(`删除主机组 ${hostgroup.name} 成功`);
-          this.getallhostgroup();
-          this.is_create = false;
+          Message.success(`删除主机组 ${hostgroup.name} 成功`)
+          this.getallhostgroup()
+          this.is_create = false
         } else {
-          Message.error(`删除主机组 ${hostgroup.name} 失败: ${resp.msg}`);
+          Message.error(`删除主机组 ${hostgroup.name} 失败: ${resp.msg}`)
         }
-      });
+      })
     },
     startgetselecthost() {
-      getselecthost().then(resp => {
-        this.hostselect = resp.data;
-      });
+      getselecthost().then((resp) => {
+        this.hostselect = resp.data
+      })
     },
     submithostgroup(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
-          var name = this.hostgroup.name;
+          var name = this.hostgroup.name
           if (this.is_create === true) {
-            delete this.hostgroup.id;
-            createhostgroup(this.hostgroup).then(resp => {
+            delete this.hostgroup.id
+            createhostgroup(this.hostgroup).then((resp) => {
               if (resp.code === 0) {
-                Message.success(`创建主机组 ${name} 成功`);
-                this.getallhostgroup();
-                this.is_create = false;
+                Message.success(`创建主机组 ${name} 成功`)
+                this.getallhostgroup()
+                this.is_create = false
               } else {
-                Message.error(`创建主机组 ${name} 失败: ${resp.msg}`);
+                Message.error(`创建主机组 ${name} 失败: ${resp.msg}`)
               }
-            });
+            })
           }
           if (this.is_change === true) {
-            delete this.hostgroup.name;
-            changehostgroup(this.hostgroup).then(resp => {
+            delete this.hostgroup.name
+            changehostgroup(this.hostgroup).then((resp) => {
               if (resp.code === 0) {
-                Message.success(`修改主机组 ${name} 成功`);
-                this.getallhostgroup();
-                this.is_change = false;
+                Message.success(`修改主机组 ${name} 成功`)
+                this.getallhostgroup()
+                this.is_change = false
               } else {
-                Message.error(`修改主机组 ${name} 失败: ${resp.msg}`);
+                Message.error(`修改主机组 ${name} 失败: ${resp.msg}`)
               }
-            });
+            })
           }
         }
-      });
+      })
     },
     handleCurrentChangerun(page) {
-      this.hostgroupquery.offset = (page - 1) * this.hostgroupquery.limit;
-      this.getallhostgroup();
-    }
-  }
-};
+      this.hostgroupquery.offset = (page - 1) * this.hostgroupquery.limit
+      this.getallhostgroup()
+    },
+  },
+}
 </script>
 
 <style scoped>

@@ -20,6 +20,6 @@ export function validUsername(str) {
   return str !== ''
 }
 
-export function isNumber(obj) {  
+export function isNumber(obj) {
   return typeof obj === 'number' && !isNaN(obj)
 }

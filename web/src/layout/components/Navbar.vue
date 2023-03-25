@@ -9,14 +9,19 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <a target="_blank" href="https://github.com/labulaka521/crocodile/wiki" class="doc">帮助文档</a>
+      <a
+        target="_blank"
+        href="https://github.com/labulaka521/crocodile/wiki"
+        class="doc"
+        >帮助文档</a
+      >
       <el-badge :value="notifycount" class="badge">
         <router-link to="/notify">
-          <i style="font-size: 16px;height:32px;" class="el-icon-bell"></i>
+          <i style="font-size: 16px; height: 32px" class="el-icon-bell"></i>
         </router-link>
       </el-badge>
       <el-dropdown size="small" placement="top">
-        <div class="name">{{name}}</div>
+        <div class="name">{{ name }}</div>
         <el-dropdown-menu>
           <router-link to="/">
             <el-dropdown-item>首页</el-dropdown-item>
@@ -25,7 +30,7 @@
             <el-dropdown-item>个人设置</el-dropdown-item>
           </router-link>
           <el-dropdown-item>
-            <span style="display:block;" @click="logout">退出登录</span>
+            <span style="display: block" @click="logout">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -34,46 +39,46 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/Breadcrumb";
-import Hamburger from "@/components/Hamburger";
-import { getnotify } from "@/api/notify";
+import { mapGetters } from 'vuex'
+import Breadcrumb from '@/components/Breadcrumb'
+import Hamburger from '@/components/Hamburger'
+import { getnotify } from '@/api/notify'
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
   },
   computed: {
-    ...mapGetters(["sidebar"])
+    ...mapGetters(['sidebar']),
   },
   created() {
-    this.startgetnotifys();
-    this.interval = setInterval(this.startgetnotifys, 5000);
+    this.startgetnotifys()
+    this.interval = setInterval(this.startgetnotifys, 5000)
   },
   data() {
     return {
       name: this.$store.getters.name,
       notifycount: 0,
-      interval: null
-    };
+      interval: null,
+    }
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch("app/toggleSideBar");
+      this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch("user/logout");
-      window.clearInterval(this.interval);
-      location.reload();
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      await this.$store.dispatch('user/logout')
+      window.clearInterval(this.interval)
+      location.reload()
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     startgetnotifys() {
-      getnotify().then(resp => {
-        this.notifycount = resp.data.length;
-      });
-    }
-  }
-};
+      getnotify().then((resp) => {
+        this.notifycount = resp.data.length
+      })
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

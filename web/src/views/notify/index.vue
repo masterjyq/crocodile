@@ -7,7 +7,8 @@
           size="mini"
           type="warning"
           @click="markallread()"
-        >全部已读</el-button>
+          >全部已读</el-button
+        >
         <br />
         <el-table
           highlight-current-row
@@ -19,19 +20,24 @@
         >
           <el-table-column align="center" label="消息标题">
             <template slot-scope="scope">
-              <span
-                style="color: gray;font-size: 15px;font-weight: bold"
-              >{{ scope.row.notify_typedesc }}: {{ scope.row.title }}</span>
+              <span style="color: gray; font-size: 15px; font-weight: bold"
+                >{{ scope.row.notify_typedesc }}: {{ scope.row.title }}</span
+              >
               <br />
-              <span style="color: #909399;font-size: 10px">{{ scope.row.notify_timedesc }}</span>
+              <span style="color: #909399; font-size: 10px">{{
+                scope.row.notify_timedesc
+              }}</span>
             </template>
           </el-table-column>
         </el-table>
       </el-aside>
       <el-divider direction="vertical"></el-divider>
       <el-main>
-        <el-card v-show="notifycontent !== '' && data.length > 0 " class="box-card">
-          <span style="white-space: pre-line;" v-html="notifycontent"></span>
+        <el-card
+          v-show="notifycontent !== '' && data.length > 0"
+          class="box-card"
+        >
+          <span style="white-space: pre-line" v-html="notifycontent"></span>
         </el-card>
       </el-main>
     </el-container>
@@ -39,46 +45,46 @@
 </template>
 
 <script>
-import { getnotify, readnotify } from "@/api/notify";
-import { Message } from "element-ui";
+import { getnotify, readnotify } from '@/api/notify'
+import { Message } from 'element-ui'
 
 export default {
   data() {
     return {
       data: [],
-      notifycontent: "",
+      notifycontent: '',
       lastreadindex: null,
-    };
+    }
   },
   created() {
-    this.startgetnotifys();
+    this.startgetnotifys()
   },
   methods: {
     handleclick(row, column, event) {
       if (this.lastreadindex != null) {
-        this.data.splice(this.lastreadindex, 1);
+        this.data.splice(this.lastreadindex, 1)
       }
-      this.notifycontent = row.content;
-      readnotify({ id: row.id });
-      this.lastreadindex = this.data.indexOf(row);
+      this.notifycontent = row.content
+      readnotify({ id: row.id })
+      this.lastreadindex = this.data.indexOf(row)
     },
     startgetnotifys() {
       getnotify().then((resp) => {
-        this.data = resp.data;
-      });
+        this.data = resp.data
+      })
     },
     markallread() {
       readnotify({}).then((resp) => {
         if (resp.code === 0) {
-          Message.success("ok");
-          this.data = [];
+          Message.success('ok')
+          this.data = []
         } else {
-          Message.error(`${resp.msg}`);
+          Message.error(`${resp.msg}`)
         }
-      });
+      })
     },
   },
-};
+}
 </script>
 
 <style>

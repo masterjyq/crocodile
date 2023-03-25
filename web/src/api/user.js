@@ -1,12 +1,10 @@
 import request from '@/utils/request'
 
-
-
 export function login(data) {
   return request({
     url: '/api/v1/user/login',
     method: 'post',
-    auth: data
+    auth: data,
   })
 }
 
@@ -21,23 +19,21 @@ export function getselectuser() {
   return request({
     url: '/api/v1/user/select',
     method: 'get',
-
   })
 }
-
 
 export function getallusers(params) {
   return request({
     url: '/api/v1/user/all',
     method: 'get',
-    params: params
+    params: params,
   })
 }
 
 export function getInfo() {
   return request({
     url: '/api/v1/user/info',
-    method: 'get'
+    method: 'get',
   })
 }
 
@@ -45,7 +41,7 @@ export function changeselfinfo(data) {
   return request({
     url: '/api/v1/user/info',
     method: 'put',
-    data: data
+    data: data,
   })
 }
 
@@ -54,7 +50,7 @@ export function adminchangeinfo(data) {
   return request({
     url: '/api/v1/user/admin',
     method: 'put',
-    data: data
+    data: data,
   })
 }
 
@@ -62,23 +58,22 @@ export function admindeleteuser(data) {
   return request({
     url: '/api/v1/user/admin',
     method: 'delete',
-    data: data
+    data: data,
   })
 }
-
 
 export function createuser(data) {
   return request({
     url: '/api/v1/user/registry',
     method: 'post',
-    data: data
+    data: data,
   })
 }
 
 export function getalarmstatus() {
   return request({
     url: '/api/v1/user/alarmstatus',
-    method: 'get'
+    method: 'get',
   })
 }
 
@@ -86,7 +81,6 @@ export function getoperatelog(params) {
   return request({
     url: '/api/v1/user/operate',
     method: 'get',
-    params: params
+    params: params,
   })
 }
-

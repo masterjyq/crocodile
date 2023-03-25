@@ -27,14 +27,47 @@
             <year v-model="yearVal" lable="年"></year>
           </el-tab-pane>
         </el-tabs>
-        <el-table :data="tableData" size="mini" border style="width: 100%; margin-top: 5px;">
-          <el-table-column prop="sVal" label="秒" min-width="60"></el-table-column>
-          <el-table-column prop="mVal" label="分" min-width="60"></el-table-column>
-          <el-table-column prop="hVal" label="时" min-width="60"></el-table-column>
-          <el-table-column prop="dVal" label="日" min-width="60"></el-table-column>
-          <el-table-column prop="monthVal" label="月" min-width="60"></el-table-column>
-          <el-table-column prop="weekVal" label="周" min-width="60"></el-table-column>
-          <el-table-column prop="yearVal" label="年" min-width="60"></el-table-column>
+        <el-table
+          :data="tableData"
+          size="mini"
+          border
+          style="width: 100%; margin-top: 5px"
+        >
+          <el-table-column
+            prop="sVal"
+            label="秒"
+            min-width="60"
+          ></el-table-column>
+          <el-table-column
+            prop="mVal"
+            label="分"
+            min-width="60"
+          ></el-table-column>
+          <el-table-column
+            prop="hVal"
+            label="时"
+            min-width="60"
+          ></el-table-column>
+          <el-table-column
+            prop="dVal"
+            label="日"
+            min-width="60"
+          ></el-table-column>
+          <el-table-column
+            prop="monthVal"
+            label="月"
+            min-width="60"
+          ></el-table-column>
+          <el-table-column
+            prop="weekVal"
+            label="周"
+            min-width="60"
+          ></el-table-column>
+          <el-table-column
+            prop="yearVal"
+            label="年"
+            min-width="60"
+          ></el-table-column>
         </el-table>
       </el-col>
       <el-col :span="7">
@@ -45,7 +78,8 @@
           <el-timeline-item
             v-for="(timestamp, index) in cronrecenttime"
             :key="index"
-            :timestamp="timestamp">
+            :timestamp="timestamp"
+          >
           </el-timeline-item>
         </el-timeline>
       </el-col>
@@ -54,40 +88,40 @@
 </template>
 
 <script>
-import SecondAndMinute from "./secondAndMinute";
-import hour from "./hour";
-import day from "./day";
-import month from "./month";
-import week from "./week";
-import year from "./year";
-import { parsecron } from "@/api/task";
+import SecondAndMinute from './secondAndMinute'
+import hour from './hour'
+import day from './day'
+import month from './month'
+import week from './week'
+import year from './year'
+import { parsecron } from '@/api/task'
 export default {
   props: {
     value: {
-      type: String
-    }
+      type: String,
+    },
   },
   data() {
     return {
-      activeName: "s",
-      collapseactiveName: ["1"],
-      sVal: "",
-      mVal: "",
-      hVal: "",
-      dVal: "",
-      monthVal: "",
-      weekVal: "",
-      yearVal: "",
+      activeName: 's',
+      collapseactiveName: ['1'],
+      sVal: '',
+      mVal: '',
+      hVal: '',
+      dVal: '',
+      monthVal: '',
+      weekVal: '',
+      yearVal: '',
       cronrecenttime: [],
       disableweek: false,
-      disableday: false
-    };
+      disableday: false,
+    }
   },
   watch: {
     value(a, b) {
-      this.updateVal();
-      this.handleChange();
-    }
+      this.updateVal()
+      this.handleChange()
+    },
   },
   computed: {
     tableData() {
@@ -99,13 +133,13 @@ export default {
           dVal: this.dVal,
           monthVal: this.monthVal,
           weekVal: this.weekVal,
-          yearVal: this.yearVal
-        }
-      ];
+          yearVal: this.yearVal,
+        },
+      ]
     },
     value_() {
       if (!this.dVal && !this.weekVal) {
-        return "";
+        return ''
       }
       // if (this.dVal === "?" && this.weekVal === "?") {
       //   this.$message.error("日期与星期不可以同时为“不指定”");
@@ -113,57 +147,57 @@ export default {
       // if (this.dVal !== "?" && this.weekVal !== "?") {
       //   this.$message.error("日期与星期必须有一个为“不指定”");
       // }
-      if (this.dVal === "?") {
-        this.disableweek = false;
+      if (this.dVal === '?') {
+        this.disableweek = false
       } else {
-        this.disableweek = true;
+        this.disableweek = true
       }
 
-      if (this.weekVal === "?") {
-        this.disableday = false;
+      if (this.weekVal === '?') {
+        this.disableday = false
       } else {
-        this.disableday = true;
+        this.disableday = true
       }
       // 日 不指定  周 可以选
       // 日 指定 周 禁止
       // 周 不指定 日 可以选
       // 周 指定 日 禁止选
 
-      let v = `${this.sVal} ${this.mVal} ${this.hVal} ${this.dVal} ${this.monthVal} ${this.weekVal} ${this.yearVal}`;
+      let v = `${this.sVal} ${this.mVal} ${this.hVal} ${this.dVal} ${this.monthVal} ${this.weekVal} ${this.yearVal}`
       if (v !== this.value) {
-        this.$emit("input", v);
+        this.$emit('input', v)
       }
-      return v;
-    }
+      return v
+    },
   },
   methods: {
     updateVal() {
       if (!this.value) {
-        return;
+        return
       }
-      let arrays = this.value.split(" ");
-      this.sVal = arrays[0];
-      this.mVal = arrays[1];
-      this.hVal = arrays[2];
-      this.dVal = arrays[3];
-      this.monthVal = arrays[4];
-      this.weekVal = arrays[5];
-      this.yearVal = arrays[6];
+      let arrays = this.value.split(' ')
+      this.sVal = arrays[0]
+      this.mVal = arrays[1]
+      this.hVal = arrays[2]
+      this.dVal = arrays[3]
+      this.monthVal = arrays[4]
+      this.weekVal = arrays[5]
+      this.yearVal = arrays[6]
     },
     handleChange() {
-      if (this.value === "") {
-        return;
+      if (this.value === '') {
+        return
       }
       var query = {
-        expr: window.btoa(this.value)
-      };
-      parsecron(query).then(response => {
-        this.cronrecenttime = response.data;
-      });
-    }
+        expr: window.btoa(this.value),
+      }
+      parsecron(query).then((response) => {
+        this.cronrecenttime = response.data
+      })
+    },
   },
   created() {
-    this.updateVal();
+    this.updateVal()
     this.handleChange()
   },
   components: {
@@ -172,9 +206,9 @@ export default {
     day,
     month,
     week,
-    year
-  }
-};
+    year,
+  },
+}
 </script>
 
 <style lang="css">

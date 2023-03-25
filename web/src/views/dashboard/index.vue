@@ -8,7 +8,12 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">任务数量</div>
-            <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+            <count-to
+              :start-val="0"
+              :end-val="102400"
+              :duration="2600"
+              class="card-panel-num"
+            />
           </div>
         </div>
       </el-col>
@@ -19,7 +24,12 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">主机组数量</div>
-            <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+            <count-to
+              :start-val="0"
+              :end-val="81212"
+              :duration="3000"
+              class="card-panel-num"
+            />
           </div>
         </div>
       </el-col>
@@ -30,7 +40,12 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">Worker数量</div>
-            <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+            <count-to
+              :start-val="0"
+              :end-val="9280"
+              :duration="3200"
+              class="card-panel-num"
+            />
           </div>
         </div>
       </el-col>
@@ -41,29 +56,32 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">任务调度次数</div>
-            <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+            <count-to
+              :start-val="0"
+              :end-val="13600"
+              :duration="3600"
+              class="card-panel-num"
+            />
           </div>
         </div>
       </el-col>
     </el-row>
-    <div class="sub-title">
-      Coming...
-    </div>
+    <div class="sub-title">Coming...</div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import CountTo from "vue-count-to";
+import { mapGetters } from 'vuex'
+import CountTo from 'vue-count-to'
 export default {
-  name: "Dashboard",
+  name: 'Dashboard',
   components: {
-    CountTo
+    CountTo,
   },
   computed: {
-    ...mapGetters(["name", "roles"])
-  }
-};
+    ...mapGetters(['name', 'roles']),
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -168,7 +186,7 @@ export default {
   text-align: left;
   color: #909399;
   font-size: 20px;
-  font-family: "Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif";
+  font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif';
   // margin-bottom: 6px;
   font-weight: 700;
 }

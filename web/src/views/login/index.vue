@@ -16,7 +16,9 @@
     >
       <div class="title-container">
         <h3 class="title">Crocodile分布式任务调度平台</h3>
-        <h6 v-show="needinstall" class="installtitle">首次运行请先创建默认管理员用户然后进行安装操作</h6>
+        <h6 v-show="needinstall" class="installtitle">
+          首次运行请先创建默认管理员用户然后进行安装操作
+        </h6>
       </div>
 
       <el-form-item prop="username">
@@ -75,147 +77,147 @@
         v-if="needinstall"
         :loading="loading"
         type="primary"
-        style="width:100%;margin-bottom:30px;"
+        style="width: 100%; margin-bottom: 30px"
         @click.native.prevent="startinstallcrocodile"
-      >开始安装</el-button>
+        >开始安装</el-button
+      >
       <el-button
         v-else
         :loading="loading"
         type="primary"
-        style="width:100%;margin-bottom:30px;"
+        style="width: 100%; margin-bottom: 30px"
         @click.native.prevent="handleLogin"
-      >登陆</el-button>
+        >登陆</el-button
+      >
       <br />
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
-import { queryinstallstatus, startinstall } from "@/api/install";
-import { Message } from "element-ui";
-import { login, logout } from "@/api/user";
+import { validUsername } from '@/utils/validate'
+import { queryinstallstatus, startinstall } from '@/api/install'
+import { Message } from 'element-ui'
+import { login, logout } from '@/api/user'
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("Please enter the correct user name"));
+        callback(new Error('Please enter the correct user name'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("The password can not be less than 6 digits"));
+        callback(new Error('The password can not be less than 6 digits'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       loginForm: {
-        username: "",
-        password: ""
+        username: '',
+        password: '',
       },
-      password2: "",
+      password2: '',
       loginRules: {
         username: [
-          { required: true, trigger: "blur", message: "请输入用户名" }
+          { required: true, trigger: 'blur', message: '请输入用户名' },
         ],
-        password: [{ required: true, trigger: "blur", message: "请输入密码" }]
+        password: [{ required: true, trigger: 'blur', message: '请输入密码' }],
       },
       loading: false,
-      passwordType: "password",
-      passwordType2: "password",
+      passwordType: 'password',
+      passwordType2: 'password',
       redirect: undefined,
       needinstall: false,
-      installloading: false
-    };
+      installloading: false,
+    }
   },
   watch: {
     $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect;
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {
-    this.startqueryinstallstatus();
+    this.startqueryinstallstatus()
   },
   methods: {
     startqueryinstallstatus() {
-      queryinstallstatus().then(resp => {
+      queryinstallstatus().then((resp) => {
         if (resp.code === 10700) {
-          this.needinstall = true;
-          Message.warning(resp.msg);
+          this.needinstall = true
+          Message.warning(resp.msg)
         }
-      });
+      })
     },
     startinstallcrocodile() {
       // loginForm
-      this.$refs["loginForm"].validate(valid => {
+      this.$refs['loginForm'].validate((valid) => {
         if (valid) {
           if (this.loginForm.password !== this.password2) {
-            Message.warning("两次密码输入不相同");
-            return;
+            Message.warning('两次密码输入不相同')
+            return
           }
           try {
-            window.btoa(
-              `${this.loginForm.username}:${this.loginForm.password}`
-            );
+            window.btoa(`${this.loginForm.username}:${this.loginForm.password}`)
           } catch (error) {
-            Message.warning("用户名和密码只能使用字母、数字、符号");
-            return;
+            Message.warning('用户名和密码只能使用字母、数字、符号')
+            return
           }
           if (this.loginForm.password.length < 8) {
-            Message.warning("密码最少8位");
-            return;
+            Message.warning('密码最少8位')
+            return
           }
-          this.installloading = true;
+          this.installloading = true
           startinstall(this.loginForm)
-            .then(resp => {
+            .then((resp) => {
               if (resp.code === 0) {
-                this.startqueryinstallstatus();
-                this.installloading = false;
-                this.needinstall = false;
-                Message.success("恭喜你已经安装成功🎉");
+                this.startqueryinstallstatus()
+                this.installloading = false
+                this.needinstall = false
+                Message.success('恭喜你已经安装成功🎉')
               } else {
-                Message.error(resp.msg);
-                this.installloading = false;
-                this.needinstall = false;
+                Message.error(resp.msg)
+                this.installloading = false
+                this.needinstall = false
               }
             })
-            .catch(err => {
-              Message.error(err);
-              console.log(err);
-              this.installloading = false;
-            });
+            .catch((err) => {
+              Message.error(err)
+              console.log(err)
+              this.installloading = false
+            })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.$store
-            .dispatch("user/login", this.loginForm)
+            .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
-              this.loading = false;
+              this.$router.push({ path: this.redirect || '/' })
+              this.loading = false
             })
             .catch(() => {
-              this.loading = false;
-            });
+              this.loading = false
+            })
         } else {
-          return false;
+          return false
         }
-      });
-    }
-  }
-};
+      })
+    },
+  },
+}
 </script>
 
 <style lang="scss">

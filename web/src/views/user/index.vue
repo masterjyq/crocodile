@@ -143,7 +143,7 @@
         <el-table-column align="center" label="状态" min-width="70">
           <template slot-scope="scope">
             <el-switch
-              :value="!scope.row.forbid"
+              :model-value="!scope.row.forbid"
               active-color="#13ce66"
               inactive-color="#ff4949"
             ></el-switch>
@@ -174,9 +174,9 @@
                 >修改</el-button
               >
               <el-popconfirm
+                @confirm="deleteuser(scope.row.id)"
                 :hideIcon="true"
                 title="确定删除此用户(只能删除非管理员用户)"
-                @onConfirm="deleteuser(scope.row.id)"
               >
                 <el-button slot="reference" type="danger" size="mini"
                   >删除</el-button
@@ -207,7 +207,7 @@ import {
   admindeleteuser,
 } from '@/api/user'
 
-import { Message } from 'element-ui'
+import { ElMessage as Message } from 'element-plus'
 
 export default {
   data() {

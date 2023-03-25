@@ -80,9 +80,9 @@
                 >
               </el-tooltip>
               <el-popconfirm
+                @confirm="startdeletehost(scope.row.id)"
                 :hideIcon="true"
                 title="删除此主机?"
-                @onConfirm="startdeletehost(scope.row.id)"
               >
                 <el-button type="danger" slot="reference" size="mini"
                   >删除</el-button
@@ -107,7 +107,7 @@
 
 <script>
 import { gethost, stophost, deletehost } from '@/api/host'
-import { Message } from 'element-ui'
+import { ElMessage as Message } from 'element-plus'
 export default {
   data() {
     return {

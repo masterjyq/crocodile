@@ -2,10 +2,10 @@
   <div class="app-container">
     <div style="margin-left: 25px; margin-right: 80px">
       <!-- <el-tabs v-model="activename" @tab-click="handleClick">
-        <el-tab-pane name="setting">
-          <span slot="label">
-            <svg-icon icon-class="usersetting" />设置
-      </span>-->
+          <el-tab-pane name="setting">
+            <span slot="label">
+              <svg-icon icon-class="usersetting" />设置
+        </span>-->
       <el-form label-position="right" label-width="80px" :model="userinfo">
         <el-form-item label="修改密码">
           <el-tooltip content="修改密码" placement="top">
@@ -42,26 +42,26 @@
           </el-form>
 
           <!-- <el-input
-            v-if="changepasswd"
-            type="password"
-            v-model="password1"
-            size="mini"
-            clearable
-            placeholder="请输入密码"
-            style="width: 300px;"
-          ></el-input>
-          <span v-if="changepasswd">
-            <br />
-          </span>
-          <el-input
-            type="password"
-            v-if="changepasswd"
-            v-model="password2"
-            size="mini"
-            clearable
-            placeholder="请再次输入密码"
-            style="width: 300px;"
-          ></el-input>-->
+              v-if="changepasswd"
+              type="password"
+              v-model="password1"
+              size="mini"
+              clearable
+              placeholder="请输入密码"
+              style="width: 300px;"
+            ></el-input>
+            <span v-if="changepasswd">
+              <br />
+            </span>
+            <el-input
+              type="password"
+              v-if="changepasswd"
+              v-model="password2"
+              size="mini"
+              clearable
+              placeholder="请再次输入密码"
+              style="width: 300px;"
+            ></el-input>-->
         </el-form-item>
         <el-form-item label="用户名">
           <el-input
@@ -115,9 +115,9 @@
       </el-form>
       <div style="margin-left: 80px">
         <el-popconfirm
+          @confirm="submitchangeinfo"
           :hideIcon="true"
           title="确定修改个人信息?"
-          @onConfirm="submitchangeinfo"
         >
           <el-button slot="reference" size="small" type="primary"
             >更 新</el-button
@@ -130,7 +130,7 @@
 
 <script>
 import { getInfo, changeselfinfo, getalarmstatus } from '@/api/user'
-import { Message } from 'element-ui'
+import { ElMessage as Message } from 'element-plus'
 export default {
   data() {
     return {

@@ -38,8 +38,8 @@
             >
               <span style="float: left">{{ item.label }}</span>
               <!-- <span
-                style="float: right; color: #8492a6; font-size: 13px;margin-right: 30px;"
-              >{{ item.online }}</span>-->
+                  style="float: right; color: #8492a6; font-size: 13px;margin-right: 30px;"
+                >{{ item.online }}</span>-->
               <span
                 style="
                   float: right;
@@ -214,9 +214,9 @@
                 >修改</el-button
               >
               <el-popconfirm
+                @confirm="deletehostgrouppre(scope.row)"
                 :hideIcon="true"
                 title="确定删除主机组?"
-                @onConfirm="deletehostgrouppre(scope.row)"
               >
                 <el-button slot="reference" type="danger" size="mini"
                   >删除</el-button
@@ -252,7 +252,7 @@ import {
 
 import { getselecthost } from '@/api/host'
 
-import { Message } from 'element-ui'
+import { ElMessage as Message } from 'element-plus'
 
 export default {
   data() {

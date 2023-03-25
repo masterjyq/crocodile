@@ -1,5 +1,3 @@
-// cron 组件来自 https://gitee.com/lindeyi/vue-cron
-
 <template>
   <div class="cron" :val="value_">
     <el-row>

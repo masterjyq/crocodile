@@ -155,7 +155,7 @@
                         :disabled="is_preview"
                         size="mini"
                         @click="deleteheaderRow(scope.$index)"
-                        icon="el-icon-delete"
+                        :icon="ElIconDelete"
                         type="info"
                         circle
                       ></el-button>
@@ -240,7 +240,7 @@
                           :disabled="is_preview"
                           size="mini"
                           @click="deleteformRow(scope.$index)"
-                          icon="el-icon-delete"
+                          :icon="ElIconDelete"
                           type="info"
                           circle
                         ></el-button>
@@ -622,9 +622,9 @@
                   >实时日志</el-button
                 >
                 <el-popconfirm
+                  @confirm="startkilltask(scope.row)"
                   :hideIcon="true"
                   title="确定终止任务?"
-                  @onConfirm="startkilltask(scope.row)"
                 >
                   <el-button slot="reference" type="danger" size="mini"
                     >终止任务</el-button
@@ -883,9 +883,9 @@
                 >
               </el-tooltip>
               <el-popconfirm
+                @confirm="startdeletetask(scope.row)"
                 :hideIcon="true"
                 title="删除任务后对应的任务日志也会被删除，确定删除任务?"
-                @onConfirm="startdeletetask(scope.row)"
               >
                 <el-button slot="reference" type="danger" size="mini"
                   >删除</el-button
@@ -907,9 +907,9 @@
                 >
               </el-button>
               <el-popconfirm
+                @confirm="startruntask(scope.row)"
                 :hideIcon="true"
                 title="立即运行任务?"
-                @onConfirm="startruntask(scope.row)"
               >
                 <el-button type="primary" slot="reference" size="mini"
                   >运行</el-button
@@ -957,6 +957,7 @@
 </template>
 
 <script>
+import { Delete as ElIconDelete } from '@element-plus/icons'
 import {
   gettask,
   createtask,
@@ -977,40 +978,11 @@ import { getselectuser } from '@/api/user'
 
 import store from '@/store'
 import { isNumber } from '@/utils/validate'
-import { Message } from 'element-ui'
+import { ElMessage as Message } from 'element-plus'
 
 import cron from '@/components/Cron/cron'
 
 export default {
-  components: {
-    editor: require('vue2-ace-editor'),
-    cron,
-  },
-  computed: {
-    CronCollapse() {
-      return `点击查看【${this.cronExpression}】最近五次的运行时间`
-    },
-    clonediatitle() {
-      return `克隆任务 ${this.clonename}`
-    },
-  },
-  watch: {
-    'task.cronexpr': {
-      handler(newv, oldv) {
-        this.cronExpression = newv
-      },
-      deep: true,
-      immediate: true,
-    },
-    diarealogVisible: {
-      handler(newv, oldv) {
-        if (newv === false && this.tlsocket != null) {
-          console.log('start close socket')
-          this.tlsocket.close()
-        }
-      },
-    },
-  },
   data() {
     return {
       listLoading: false,
@@ -1233,42 +1205,43 @@ export default {
       examplecode: {
         1: `#!/usr/bin/env sh
 function main() {
-    echo "run shell"
+echo "run shell"
 }
 
 main
-        `,
+`,
         2: `#!/usr/bin/env python3
 def main():
-    print("run python3")
+print("run python3")
 
 if __name__ == '__main__':
-    main()`,
+main()`,
         4: `#!/usr/bin/env python
 def main():
-    print("run python")
+print("run python")
 
 if __name__ == '__main__':
-    main()`,
+main()`,
         3: `package main
 
 import "fmt"
 
 func main() {
-	fmt.Println("run golang")
+fmt.Println("run golang")
 }`,
         5: `#!/usr/bin/env node
 console.log("run nodejs")`,
         6: `tasklist`,
       },
-
       hostgroupselect: [],
       userselect: [],
       taskselect: [],
       dialogVisible: false,
       diarealogVisible: false,
-      trsocket: null, // task run status
-      tlsocket: null, // task run log,
+      // task run status
+      trsocket: null,
+      // task run log,
+      tlsocket: null,
       runtaskdata: [],
       diarealtasktitle: '',
       diatasktitle: '',
@@ -1283,7 +1256,37 @@ console.log("run nodejs")`,
       cloneid: '',
       clonename: '',
       clonevisible: false,
+      ElIconDelete,
     }
+  },
+  components: {
+    editor: require('vue2-ace-editor'),
+    cron,
+  },
+  computed: {
+    CronCollapse() {
+      return `点击查看【${this.cronExpression}】最近五次的运行时间`
+    },
+    clonediatitle() {
+      return `克隆任务 ${this.clonename}`
+    },
+  },
+  watch: {
+    'task.cronexpr': {
+      handler(newv, oldv) {
+        this.cronExpression = newv
+      },
+      deep: true,
+      immediate: true,
+    },
+    diarealogVisible: {
+      handler(newv, oldv) {
+        if (newv === false && this.tlsocket != null) {
+          console.log('start close socket')
+          this.tlsocket.close()
+        }
+      },
+    },
   },
   created() {
     this.getalltask()

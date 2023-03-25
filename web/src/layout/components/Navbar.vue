@@ -15,9 +15,11 @@
         class="doc"
         >帮助文档</a
       >
-      <el-badge :value="notifycount" class="badge">
+      <el-badge :model-value="notifycount" class="badge">
         <router-link to="/notify">
-          <i style="font-size: 16px; height: 32px" class="el-icon-bell"></i>
+          <el-icon style="font-size: 16px; height: 32px"
+            ><el-icon-bell
+          /></el-icon>
         </router-link>
       </el-badge>
       <el-dropdown size="small" placement="top">
@@ -39,6 +41,7 @@
 </template>
 
 <script>
+import { Bell as ElIconBell } from '@element-plus/icons'
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
@@ -47,6 +50,7 @@ export default {
   components: {
     Breadcrumb,
     Hamburger,
+    ElIconBell,
   },
   computed: {
     ...mapGetters(['sidebar']),

@@ -52,8 +52,8 @@
           auto-complete="on"
         />
         <!-- <span class="show-pwd" @click="showPwd(passwordType)">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>-->
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>-->
       </el-form-item>
       <el-form-item v-show="needinstall">
         <span class="svg-container">
@@ -70,8 +70,8 @@
           auto-complete="on"
         />
         <!-- <span class="show-pwd" @click="showPwd(passwordType2)">
-          <svg-icon :icon-class="passwordType2 === 'password' ? 'eye' : 'eye-open'" />
-        </span>-->
+            <svg-icon :icon-class="passwordType2 === 'password' ? 'eye' : 'eye-open'" />
+          </span>-->
       </el-form-item>
       <el-button
         v-if="needinstall"
@@ -97,7 +97,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import { queryinstallstatus, startinstall } from '@/api/install'
-import { Message } from 'element-ui'
+import { ElMessage as Message } from 'element-plus'
 import { login, logout } from '@/api/user'
 
 export default {

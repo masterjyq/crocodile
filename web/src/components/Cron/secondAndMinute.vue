@@ -1,4 +1,3 @@
-<!-- 秒,分钟 -->
 <template>
   <div :val="value_">
     <div>

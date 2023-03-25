@@ -46,7 +46,7 @@
 
 <script>
 import { getnotify, readnotify } from '@/api/notify'
-import { Message } from 'element-ui'
+import { ElMessage as Message } from 'element-plus'
 
 export default {
   data() {

@@ -87,7 +87,7 @@
         <el-button
           size="small"
           @click="
-            is_create = false
+            is_create = false,
             is_change = false
           "
           >取 消</el-button

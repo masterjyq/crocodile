@@ -55,7 +55,8 @@ module.exports = {
     resolve: {
       alias: {
         '@': resolve('src')
-      }
+      },
+      fallback: { path: require.resolve("path-browserify") }
     }
   },
   chainWebpack(config) {
@@ -84,10 +85,10 @@ module.exports = {
       .rule('vue')
       .use('vue-loader')
       .loader('vue-loader')
-      .tap(options => {
-        options.compilerOptions.preserveWhitespace = true
-        return options
-      })
+//      .tap(options => {
+//        options.compilerOptions.preserveWhitespace = true
+//        return options
+//      })
       .end()
 
     config

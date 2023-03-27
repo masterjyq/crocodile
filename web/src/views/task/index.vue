@@ -549,7 +549,7 @@
           v-if="is_preview === false"
           size="small"
           @click="
-            is_create = false
+            is_create = false,
             is_change = false
           "
           >取 消</el-button
@@ -558,7 +558,7 @@
           v-if="is_preview"
           size="small"
           @click="
-            is_preview = false
+            is_preview = false,
             is_change = false
           "
           >返 回</el-button
@@ -720,7 +720,7 @@
                 type="success"
                 size="small"
                 @click="
-                  query.self = true
+                  query.self = true,
                   getalltask()
                 "
                 >Self</el-button
@@ -738,7 +738,7 @@
                 type="success"
                 size="small"
                 @click="
-                  query.self = false
+                  query.self = false,
                   getalltask()
                 "
                 >AllTask</el-button
@@ -877,9 +877,9 @@
                   type="warning"
                   size="mini"
                   @click="
-                    clonevisible = true
-                    clonename = scope.row.name
-                    cloneid = scope.row.id
+                    clonevisible = true,
+                    clonename = scope.row.name,
+                    cloneid = scope.row.id,
                     clonenewname = ''
                   "
                   >克隆</el-button
@@ -960,7 +960,7 @@
 </template>
 
 <script>
-import { Delete as ElIconDelete } from '@element-plus/icons'
+import { Delete as ElIconDelete } from '@element-plus/icons-vue'
 import {
   gettask,
   createtask,

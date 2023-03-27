@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { Bell as ElIconBell } from '@element-plus/icons'
+import { Bell as ElIconBell } from '@element-plus/icons-vue'
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'

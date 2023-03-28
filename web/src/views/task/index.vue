@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
-    <div v-if="is_create === true || is_change == true" style="margin-left:25px;margin-right:80px">
+    <div
+      v-if="is_create === true || is_change == true"
+      style="margin-left: 25px; margin-right: 80px"
+    >
       <el-form
         :model="task"
         ref="task"
@@ -15,12 +18,16 @@
             v-model="task.name"
             placeholder="请输入任务名称(建议任务名称格式为:标签_名字,方便后续搜索查找)"
             clearable
-            style="width: 500px;"
+            style="width: 500px"
             maxlength="30"
             show-word-limit
           ></el-input>
         </el-form-item>
-        <el-form-item label="任务类型" prop="task_type" placeholder="请选择任务类型">
+        <el-form-item
+          label="任务类型"
+          prop="task_type"
+          placeholder="请选择任务类型"
+        >
           <el-select
             :disabled="is_preview"
             clearable
@@ -35,7 +42,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <div style="margin-left:80px;margin-right:40px">
+        <div style="margin-left: 80px; margin-right: 40px">
           <div v-if="task.task_type === 1">
             <ul>
               <el-select
@@ -51,7 +58,7 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-              <div style="margin-top:5px;">
+              <div style="margin-top: 5px">
                 <el-card :body-style="{ padding: '0px' }">
                   <editor
                     v-model="savecode.code"
@@ -65,11 +72,13 @@
                       indentedSoftWrap: false,
                       enableBasicAutocompletion: true,
                       enableSnippets: true,
-                      enableLiveAutocompletion: true
-                 }"
+                      enableLiveAutocompletion: true,
+                    }"
                   ></editor>
                 </el-card>
-                <span style="text-align: right;color: #909399;font-size: 13px;">编辑框太小? 鼠标双击试试🤔</span>
+                <span style="text-align: right; color: #909399; font-size: 13px"
+                  >编辑框太小? 鼠标双击试试🤔</span
+                >
                 <br />
               </div>
             </ul>
@@ -102,14 +111,27 @@
                   </el-table-column>
                   <el-table-column label="URL" min-width="100px;">
                     <template slot-scope="scope">
-                      <el-input :disabled="is_preview" size="mini" v-model="saveapi.url"></el-input>
+                      <el-input
+                        :disabled="is_preview"
+                        size="mini"
+                        v-model="saveapi.url"
+                      ></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
               </div>
               <div>
-                <el-table size="mini" :data="headerlist" style="width: 100%" empty-text=" ">
-                  <el-table-column prop="name" label="Header List" min-width="100px;">
+                <el-table
+                  size="mini"
+                  :data="headerlist"
+                  style="width: 100%"
+                  empty-text=" "
+                >
+                  <el-table-column
+                    prop="name"
+                    label="Header List"
+                    min-width="100px;"
+                  >
                     <template slot-scope="scope">
                       <el-input
                         :disabled="is_preview"
@@ -140,16 +162,17 @@
                     </template>
                   </el-table-column>
                 </el-table>
-                <div style="margin-left:11px">
+                <div style="margin-left: 11px">
                   <el-button
                     :disabled="is_preview"
                     type="info"
                     size="mini"
                     @click="addheader"
-                  >Add New</el-button>
+                    >Add New</el-button
+                  >
                 </div>
               </div>
-              <div v-if="['GET','HEAD'].includes(saveapi.method) === false">
+              <div v-if="['GET', 'HEAD'].includes(saveapi.method) === false">
                 <div>
                   <el-table
                     size="mini"
@@ -157,7 +180,11 @@
                     style="width: 100%"
                     empty-text=" "
                   >
-                    <el-table-column prop="name" label="Content Type" min-width="100px;">
+                    <el-table-column
+                      prop="name"
+                      label="Content Type"
+                      min-width="100px;"
+                    >
                       <template slot-scope="scope">
                         <el-select
                           :disabled="is_preview"
@@ -165,7 +192,7 @@
                           filterable
                           v-model="content_type"
                           @change="edit_header"
-                          style="width:100%;"
+                          style="width: 100%"
                         >
                           <el-option
                             v-for="item in content_typeoption"
@@ -179,8 +206,17 @@
                   </el-table>
                 </div>
                 <div v-if="content_type == 'application/x-www-form-urlencoded'">
-                  <el-table size="mini" :data="formlist" style="width: 100%" empty-text=" ">
-                    <el-table-column prop="name" label="Form List" min-width="100px;">
+                  <el-table
+                    size="mini"
+                    :data="formlist"
+                    style="width: 100%"
+                    empty-text=" "
+                  >
+                    <el-table-column
+                      prop="name"
+                      label="Form List"
+                      min-width="100px;"
+                    >
                       <template slot-scope="scope">
                         <el-input
                           :disabled="is_preview"
@@ -211,18 +247,28 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <div style="margin-left:11px">
+                  <div style="margin-left: 11px">
                     <el-button
                       :disabled="is_preview"
                       type="info"
                       size="mini"
                       @click="addform"
-                    >Add New</el-button>
+                      >Add New</el-button
+                    >
                   </div>
                 </div>
                 <div v-if="content_type == 'application/json'">
-                  <el-table size="mini" :data="bodylist" style="width: 100%" empty-text=" ">
-                    <el-table-column prop="name" label="Raw Requesy Body" min-width="100px;">
+                  <el-table
+                    size="mini"
+                    :data="bodylist"
+                    style="width: 100%"
+                    empty-text=" "
+                  >
+                    <el-table-column
+                      prop="name"
+                      label="Raw Requesy Body"
+                      min-width="100px;"
+                    >
                       <!-- <div style="margin-top:5px;"> -->
                       <el-card :body-style="{ padding: '0px' }">
                         <editor
@@ -234,7 +280,8 @@
                           :options="{
                             readOnly: is_preview,
                             wrap: 'free',
-                            indentedSoftWrap: false}"
+                            indentedSoftWrap: false,
+                          }"
                         ></editor>
                       </el-card>
                     </el-table-column>
@@ -269,7 +316,10 @@
               label="父任务运行策略"
               prop="parent_runparallel"
             >
-              <el-select :disabled="is_preview" v-model="task.parent_runparallel">
+              <el-select
+                :disabled="is_preview"
+                v-model="task.parent_runparallel"
+              >
                 <el-option
                   v-for="item in parallelrun"
                   :key="item.label"
@@ -305,7 +355,10 @@
               label="子任务运行策略"
               prop="child_runparallel"
             >
-              <el-select :disabled="is_preview" v-model="task.child_runparallel">
+              <el-select
+                :disabled="is_preview"
+                v-model="task.child_runparallel"
+              >
                 <el-option
                   v-for="item in parallelrun"
                   :key="item.label"
@@ -323,16 +376,25 @@
               clearable
               v-model="task.cronexpr"
               placeholder="请输入Cron表达式"
-              style="width: 500px;"
+              style="width: 500px"
             >
               <template slot="append">
                 <el-popover placement="top" width="700" v-model="cronPopover">
                   <cron v-show="cronPopover" v-model="cronExpression"></cron>
                   <div style="text-align: center; margin: 0">
-                    <el-button type="primary" size="medium" @click="changeCron">确定</el-button>
-                    <el-button type="warning" size="medium" @click="cronPopover = false">取消</el-button>
+                    <el-button type="primary" size="medium" @click="changeCron"
+                      >确定</el-button
+                    >
+                    <el-button
+                      type="warning"
+                      size="medium"
+                      @click="cronPopover = false"
+                      >取消</el-button
+                    >
                   </div>
-                  <el-button :disabled="is_preview" slot="reference">编辑</el-button>
+                  <el-button :disabled="is_preview" slot="reference"
+                    >编辑</el-button
+                  >
                 </el-popover>
               </template>
             </el-input>
@@ -392,7 +454,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="主机组" prop="host_groupid">
-          <el-select :disabled="is_preview" filterable v-model="task.host_groupid">
+          <el-select
+            :disabled="is_preview"
+            filterable
+            v-model="task.host_groupid"
+          >
             <el-option
               v-for="item in hostgroupselect"
               :key="item.label"
@@ -408,7 +474,7 @@
             v-model="task.expect_code"
             placeholder="期望返回码"
             clearable
-            style="width: 500px;"
+            style="width: 500px"
           ></el-input>
         </el-form-item>
         <el-form-item label="Expect Content">
@@ -419,7 +485,7 @@
             v-model="task.expect_content"
             placeholder
             clearable
-            style="width: 500px;"
+            style="width: 500px"
           ></el-input>
           <el-input
             v-else
@@ -427,7 +493,7 @@
             v-model="task.expect_content"
             placeholder="期望返回内容"
             clearable
-            style="width: 500px;"
+            style="width: 500px"
           ></el-input>
         </el-form-item>
         <el-form-item label="备注">
@@ -438,7 +504,7 @@
             v-model="task.remark"
             placeholder
             clearable
-            style="width: 500px;"
+            style="width: 500px"
             maxlength="100"
             show-word-limit
           ></el-input>
@@ -448,39 +514,67 @@
             v-model="task.remark"
             placeholder="请输入备注"
             clearable
-            style="width: 500px;"
+            style="width: 500px"
             maxlength="100"
             show-word-limit
           ></el-input>
         </el-form-item>
         <el-form-item v-if="is_preview" label="创建时间">
-          <el-input :disabled="is_preview" v-model="taskcreatetime" clearable></el-input>
+          <el-input
+            :disabled="is_preview"
+            v-model="taskcreatetime"
+            clearable
+          ></el-input>
         </el-form-item>
         <el-form-item v-if="is_preview" label="更新时间">
-          <el-input :disabled="is_preview" v-model="taskupdatetime" clearable></el-input>
+          <el-input
+            :disabled="is_preview"
+            v-model="taskupdatetime"
+            clearable
+          ></el-input>
         </el-form-item>
       </el-form>
-      <div style="margin-left: 120px;">
+      <div style="margin-left: 120px">
         <el-button
           v-if="is_preview === false"
           size="small"
           type="primary"
           @click="submittask('task')"
-        >确 定</el-button>
+          >确 定</el-button
+        >
         <el-button
           v-if="is_preview === false"
           size="small"
-          @click="is_create = false;is_change = false"
-        >取 消</el-button>
-        <el-button v-if="is_preview" size="small" @click="is_preview=false;is_change=false">返 回</el-button>
+          @click="
+            is_create = false;
+            is_change = false;
+          "
+          >取 消</el-button
+        >
+        <el-button
+          v-if="is_preview"
+          size="small"
+          @click="
+            is_preview = false;
+            is_change = false;
+          "
+          >返 回</el-button
+        >
       </div>
       <!-- </ul> -->
     </div>
     <div v-else-if="is_running === true">
       <!-- Running Task -->
       <div style="float: right">
-        <el-tooltip class="item" effect="dark" content="任务列表" placement="top-start">
-          <el-button type="warning" size="small" @click="toTask">Task</el-button>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="任务列表"
+          placement="top-start"
+        >
+          <el-button type="warning" size="small" @click="toTask"
+            >Task</el-button
+          >
         </el-tooltip>
       </div>
       <div>
@@ -491,7 +585,7 @@
           stripe
           fit
           highlight-current-row
-          style="width: 100%;"
+          style="width: 100%"
         >
           <el-table-column align="center" label="任务名称">
             <template slot-scope="scope">
@@ -521,19 +615,26 @@
           <el-table-column fixed="right" align="center" label="操作">
             <template slot-scope="scope">
               <el-button-group>
-                <el-button type="warning" size="mini" @click="startopen(scope.row)">实时日志</el-button>
+                <el-button
+                  type="warning"
+                  size="mini"
+                  @click="startopen(scope.row)"
+                  >实时日志</el-button
+                >
                 <el-popconfirm
                   :hideIcon="true"
                   title="确定终止任务?"
                   @onConfirm="startkilltask(scope.row)"
                 >
-                  <el-button slot="reference" type="danger" size="mini">终止任务</el-button>
+                  <el-button slot="reference" type="danger" size="mini"
+                    >终止任务</el-button
+                  >
                 </el-popconfirm>
               </el-button-group>
             </template>
           </el-table-column>
         </el-table>
-        <div style="margin-top: 10px;float:right;height: 70px;">
+        <div style="margin-top: 10px; float: right; height: 70px">
           <el-pagination
             :page-size="runningquery.limit"
             @current-change="handleCurrentChangeruntask"
@@ -566,7 +667,8 @@
               <span
                 class="sub-title"
                 v-if="realtasklogtitle !== '' && realtasklog === ''"
-              >正在获取任务实时运行日志，请等待...</span>
+                >正在获取任务实时运行日志，请等待...</span
+              >
               <el-card :body-style="{ padding: '0px' }">
                 <editor
                   v-if="realtasklog != ''"
@@ -576,9 +678,13 @@
                   height="500"
                   width="100%"
                   @init="realloginitEditor"
-                  :options="{ readOnly: true, wrap: 'free' ,vScrollBarAlwaysVisible: true,
-    wrapBehavioursEnabled: true,
-    autoScrollEditorIntoView: true,}"
+                  :options="{
+                    readOnly: true,
+                    wrap: 'free',
+                    vScrollBarAlwaysVisible: true,
+                    wrapBehavioursEnabled: true,
+                    autoScrollEditorIntoView: true,
+                  }"
                 ></editor>
               </el-card>
             </el-main>
@@ -587,17 +693,20 @@
       </div>
     </div>
     <div v-else>
-      <div style="float: right">
-        <el-form :inline="true" label-width="80px">
+    <el-form :inline="true" label-width="80px">
+      <div style="float: left" >
           <el-form-item label="任务名称">
             <el-input
               v-model="query.psname"
               size="small"
               @keyup.enter.native="getalltask"
-              placeholder="前置匹配模糊搜索"
-              style="width:200px;margin-right: 1px"
+              placeholder="模糊搜索"
+              style="width: 200px; margin-right: 1px"
             ></el-input>
           </el-form-item>
+      </div>
+      <div style="float: right">
+
           <el-form-item>
             <el-tooltip
               v-if="query.self === false"
@@ -610,8 +719,12 @@
                 v-if="query.self === false"
                 type="success"
                 size="small"
-                @click="query.self = true;getalltask()"
-              >Self</el-button>
+                @click="
+                  query.self = true;
+                  getalltask();
+                "
+                >个人任务</el-button
+              >
             </el-tooltip>
             <el-tooltip
               v-if="query.self === true"
@@ -624,44 +737,80 @@
                 v-if="query.self === true"
                 type="success"
                 size="small"
-                @click="query.self = false;getalltask()"
-              >AllTask</el-button>
+                @click="
+                  query.self = false;
+                  getalltask();
+                "
+                >所有任务</el-button
+              >
             </el-tooltip>
           </el-form-item>
           <el-form-item>
-            <el-tooltip class="item" effect="dark" content="新建任务" placement="top-start">
-              <el-button type="danger" size="small" @click="createtaskpre">New</el-button>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="新建任务"
+              placement="top-start"
+            >
+              <el-button type="primary" size="small" @click="createtaskpre"
+                >新建任务</el-button
+              >
             </el-tooltip>
           </el-form-item>
           <el-form-item>
-            <el-tooltip class="item" effect="dark" content="查看正在运行的任务" placement="top-start">
-              <el-button type="warning" size="small" @click="getrunningtaskpre">Running</el-button>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="查看正在运行的任务"
+              placement="top-start"
+            >
+              <el-button type="warning" size="small" @click="getrunningtaskpre"
+                >运行中任务</el-button
+              >
             </el-tooltip>
           </el-form-item>
-        </el-form>
       </div>
+              </el-form>
       <el-table
         v-loading="listLoading"
         :data="data"
         stripe
         fit
         highlight-current-row
-        style="width: 100%;"
+        style="width: 100%"
       >
-        <el-table-column align="center" fixed="left" label="任务名称" min-width="100">
+        <el-table-column
+          align="center"
+          fixed="left"
+          label="任务名称"
+          min-width="100"
+        >
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+              <el-button
+                type="text"
+                size="mini"
+                @click="changetaskpre(scope.row)"
+                >{{ scope.row.name }}</el-button>
+            <!-- <span>{{ scope.row.name }}</span> -->
           </template>
         </el-table-column>
         <el-table-column align="center" label="任务类型" width="150">
           <template slot-scope="scope">
             <span v-if="scope.row.task_type == 1">
-              <el-tag size="small" type="warning">{{ scope.row.task_typedesc }}</el-tag>
-              <el-tag size="small" type="danger">{{ scope.row.task_data.langdesc }}</el-tag>
+              <el-tag size="small" type="warning">{{
+                scope.row.task_typedesc
+              }}</el-tag>
+              <el-tag size="small" type="danger">{{
+                scope.row.task_data.langdesc
+              }}</el-tag>
             </span>
             <span v-else>
-              <el-tag size="small" type="warning">{{ scope.row.task_typedesc }}</el-tag>
-              <el-tag size="small" type="danger">{{scope.row.task_data.method}}</el-tag>
+              <el-tag size="small" type="warning">{{
+                scope.row.task_typedesc
+              }}</el-tag>
+              <el-tag size="small" type="danger">{{
+                scope.row.task_data.method
+              }}</el-tag>
             </span>
           </template>
         </el-table-column>
@@ -678,24 +827,26 @@
 
         <el-table-column align="center" label="调度状态" width="80">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.run" size="mini" type="success">Normal</el-tag>
+            <el-tag v-if="scope.row.run" size="mini" type="success"
+              >Normal</el-tag
+            >
             <el-tag v-else size="mini" type="danger">Stop</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="超时(s)" width="70">
+        <el-table-column align="center" label="超时(s)" width="50">
           <template slot-scope="scope">
             <span v-if="scope.row.timeout === -1">-</span>
             <span v-else>{{ scope.row.timeout }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="主机组" min-width="100">
+        <el-table-column align="center" label="主机组" min-width="50">
           <template slot-scope="scope">
             <span>{{ scope.row.host_group }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="报警策略" min-width="70">
+        <el-table-column align="center" label="报警策略" min-width="50">
           <template slot-scope="scope">
             <span>{{ scope.row.alarm_statusdesc }}</span>
           </template>
@@ -707,16 +858,75 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="备注" min-width="70">
+        <el-table-column align="center" label="备注" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.remark }}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作" width="130">
-          <template slot-scope="scope">
-            <el-button-group>
-              <el-button type="danger" size="mini" @click="changetaskpre(scope.row)">修改</el-button>
-              <el-tooltip class="item" effect="dark" content="从此任务克隆一个新的任务" placement="top-start">
+        <el-table-column fixed="right" align="center" label="操作" width="50">
+          <template v-slot="scope">
+            <el-dropdown size="medium" trigger="click">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>
+                    <el-button
+                      type="text"
+                      size="medium"
+                      @click="
+                        (clonevisible = true),
+                          (clonename = scope.row.name),
+                          (cloneid = scope.row.id),
+                          (clonenewname = '')
+                      "
+                      >克隆任务</el-button
+                    >
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-popconfirm
+                    @confirm="startdeletetask(scope.row)"
+                    :hideIcon="true"
+                    title="删除任务后对应的任务日志也会被删除，确定删除任务?"
+                  >
+                    <template v-slot:reference>
+                      <el-button type="text" size="medium">删除任务</el-button>
+                    </template>
+                  </el-popconfirm>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button type="text" size="medium">
+                    <router-link
+                      :to="{ name: 'Log', query: { name: scope.row.name } }"
+                      >查看日志</router-link
+                    >
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-popconfirm
+                    @confirm="startruntask(scope.row)"
+                    :hideIcon="true"
+                    title="立即运行任务?"
+                  >
+                    <template v-slot:reference>
+                      <el-button type="text" size="medium">立即运行</el-button>
+                    </template>
+                  </el-popconfirm>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <!-- <el-button-group>
+              <el-button
+                type="danger"
+                size="mini"
+                @click="changetaskpre(scope.row)"
+                >修改</el-button>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="从此任务克隆一个新的任务"
+                placement="top-start"
+              >
                 <el-button
                   type="warning"
                   size="mini"
@@ -740,11 +950,11 @@
               <el-popconfirm :hideIcon="true" title="立即运行任务?" @onConfirm="startruntask(scope.row)">
                 <el-button type="primary" slot="reference" size="mini">运行</el-button>
               </el-popconfirm>
-            </el-button-group>
+            </el-button-group> -->
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin-top: 10px;float:right;height: 70px;">
+      <div style="margin-top: 10px; float: right; height: 70px">
         <el-pagination
           :page-size="query.limit"
           @current-change="handleCurrentChangetask"
@@ -753,19 +963,28 @@
           :total="pagecount"
         ></el-pagination>
       </div>
-      <el-dialog :title="clonediatitle" center :visible.sync="clonevisible" width="20%">
+      <el-dialog
+        :title="clonediatitle"
+        center
+        :visible.sync="clonevisible"
+        width="20%"
+      >
         <el-input
           v-model="clonenewname"
           size="mini"
           placeholder="请输入新的任务名称"
-          style="width: 100%;"
+          style="width: 100%"
           maxlength="30"
           show-word-limit
         ></el-input>
         <p></p>
-        <div style="text-align: center;">
-          <el-button type="primary" size="mini" @click="startclonetask">确定</el-button>
-          <el-button size="mini" type="text" @click="clonevisible = false">取消</el-button>
+        <div style="text-align: center">
+          <el-button type="primary" size="mini" @click="startclonetask"
+            >确定</el-button
+          >
+          <el-button size="mini" type="text" @click="clonevisible = false"
+            >取消</el-button
+          >
         </div>
       </el-dialog>
     </div>
@@ -783,7 +1002,7 @@ import {
   getrunningtasks,
   gettaskLog,
   getselecttask,
-  clonetask
+  clonetask,
 } from "@/api/task";
 
 import { getToken } from "@/utils/auth";
@@ -800,7 +1019,7 @@ import cron from "@/components/Cron/cron";
 export default {
   components: {
     editor: require("vue2-ace-editor"),
-    cron
+    cron,
   },
   computed: {
     CronCollapse() {
@@ -808,7 +1027,7 @@ export default {
     },
     clonediatitle() {
       return `克隆任务 ${this.clonename}`;
-    }
+    },
   },
   watch: {
     "task.cronexpr": {
@@ -816,7 +1035,7 @@ export default {
         this.cronExpression = newv;
       },
       deep: true,
-      immediate: true
+      immediate: true,
     },
     diarealogVisible: {
       handler(newv, oldv) {
@@ -824,8 +1043,8 @@ export default {
           console.log("start close socket");
           this.tlsocket.close();
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -850,69 +1069,69 @@ export default {
         expect_code: 0,
         expect_content: "",
         alarm_status: -1,
-        remark: ""
+        remark: "",
       },
       status_options: [
         {
           value: false,
-          label: "正常"
+          label: "正常",
         },
         {
           value: true,
-          label: "停止"
-        }
+          label: "停止",
+        },
       ],
       task_typeoption: [
         {
           value: 1,
-          label: "Code"
+          label: "Code",
         },
         {
           value: 2,
-          label: "API"
-        }
+          label: "API",
+        },
       ],
       parallelrun: [
         {
           value: true,
-          label: "并行"
+          label: "并行",
         },
         {
           value: false,
-          label: "串行"
-        }
+          label: "串行",
+        },
       ],
       route_policyoption: [
         {
           value: 1,
-          label: "Random"
+          label: "Random",
         },
         {
           value: 2,
-          label: "RoundRobin"
+          label: "RoundRobin",
         },
         {
           value: 3,
-          label: "Weight"
+          label: "Weight",
         },
         {
           value: 4,
-          label: "LeastTask"
-        }
+          label: "LeastTask",
+        },
       ],
       alarm_statusoption: [
         {
           value: -2,
-          label: "Always"
+          label: "Always",
         },
         {
           value: -1,
-          label: "Fail"
+          label: "Fail",
         },
         {
           value: 1,
-          label: "Success"
-        }
+          label: "Success",
+        },
       ],
       data: [],
       runningdata: [],
@@ -920,26 +1139,26 @@ export default {
       rules: {
         name: [{ required: true, message: "请输入任务名称", trigger: "blur" }],
         task_type: [
-          { required: true, message: "请选择任务类型", trigger: "blur" }
+          { required: true, message: "请选择任务类型", trigger: "blur" },
         ],
         cronexpr: [
-          { required: true, message: "请输入Cron表达式", trigger: "blur" }
+          { required: true, message: "请输入Cron表达式", trigger: "blur" },
         ],
         timeout: [
-          { required: true, message: "请输入超时时间", trigger: "change" }
+          { required: true, message: "请输入超时时间", trigger: "change" },
         ],
         route_policy: [
-          { required: true, message: "请选择路由策略", trigger: "blur" }
+          { required: true, message: "请选择路由策略", trigger: "blur" },
         ],
         alarm_status: [
-          { required: true, message: "请选择报警策略", trigger: "blur" }
+          { required: true, message: "请选择报警策略", trigger: "blur" },
         ],
         alarm_userids: [
-          { required: true, message: "请选择报警用户", trigger: "blur" }
+          { required: true, message: "请选择报警用户", trigger: "blur" },
         ],
         host_groupid: [
-          { required: true, message: "请选择主机组", trigger: "blur" }
-        ]
+          { required: true, message: "请选择主机组", trigger: "blur" },
+        ],
       },
       is_change: false,
       is_create: false,
@@ -947,33 +1166,33 @@ export default {
       is_preview: false,
       savecode: {
         lang: 1,
-        code: ""
+        code: "",
       },
       langoption: [
         {
           value: 1,
-          label: "shell"
+          label: "shell",
         },
         {
           value: 4,
-          label: "python"
+          label: "python",
         },
         {
           value: 2,
-          label: "python3"
+          label: "python3",
         },
         {
           value: 3,
-          label: "golang"
+          label: "golang",
         },
         {
           value: 5,
-          label: "nodejs"
+          label: "nodejs",
         },
         {
           value: 6,
-          label: "windowsbat"
-        }
+          label: "windowsbat",
+        },
       ],
       lang: {
         1: "sh",
@@ -981,52 +1200,52 @@ export default {
         3: "golang",
         4: "python",
         5: "nodejs",
-        6: "windowsbat"
+        6: "windowsbat",
       },
       saveapi: {
         url: "",
         method: "GET",
         payload: "",
-        header: {}
+        header: {},
       },
       method: "",
       url: "",
       methodoption: [
         {
           value: "GET",
-          label: "GET"
+          label: "GET",
         },
         {
           value: "HEAD",
-          label: "HEAD"
+          label: "HEAD",
         },
         {
           value: "POST",
-          label: "POST"
+          label: "POST",
         },
         {
           value: "PUT",
-          label: "PUT"
+          label: "PUT",
         },
         {
           value: "PATCH",
-          label: "PATCH"
+          label: "PATCH",
         },
         {
           value: "DELETE",
-          label: "DELETE"
-        }
+          label: "DELETE",
+        },
       ],
       content_type: "",
       content_typeoption: [
         {
           value: "application/json",
-          label: "application/json"
+          label: "application/json",
         },
         {
           value: "application/x-www-form-urlencoded",
-          label: "application/x-www-form-urlencoded"
-        }
+          label: "application/x-www-form-urlencoded",
+        },
       ],
       headerlist: [{}],
       methodurl: [{}],
@@ -1040,11 +1259,11 @@ export default {
         offset: 0,
         limit: 15,
         self: false,
-        psname: ""
+        psname: "",
       },
       runningquery: {
         offset: 0,
-        limit: 15
+        limit: 15,
       },
       examplecode: {
         1: `#!/usr/bin/env sh
@@ -1075,7 +1294,7 @@ func main() {
 }`,
         5: `#!/usr/bin/env node
 console.log("run nodejs")`,
-        6: `tasklist`
+        6: `tasklist`,
       },
 
       hostgroupselect: [],
@@ -1098,7 +1317,7 @@ console.log("run nodejs")`,
       clonenewname: "",
       cloneid: "",
       clonename: "",
-      clonevisible: false
+      clonevisible: false,
     };
   },
   created() {
@@ -1106,13 +1325,13 @@ console.log("run nodejs")`,
   },
   methods: {
     getalltask() {
-      gettask(this.query).then(resp => {
+      gettask(this.query).then((resp) => {
         this.data = resp.data;
         this.pagecount = resp.count;
       });
     },
     submittask(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           this.task.expect_code = parseInt(this.task.expect_code);
           if (isNaN(this.task.expect_code)) {
@@ -1122,7 +1341,7 @@ console.log("run nodejs")`,
             this.task.task_data = this.savecode;
           } else if (this.task.task_type === 2) {
             // add header
-            this.headerlist.forEach(item => {
+            this.headerlist.forEach((item) => {
               if (item.key !== "") {
                 this.saveapi.header[item.key] = item.value;
               }
@@ -1131,7 +1350,7 @@ console.log("run nodejs")`,
             if (["GET", "HEAD"].includes(this.saveapi.method) === false) {
               if (this.content_type === "application/x-www-form-urlencoded") {
                 var formlist = [];
-                this.formlist.forEach(item => {
+                this.formlist.forEach((item) => {
                   if (item.key !== "") {
                     formlist.push(`${item.key}=${item.value}`);
                   }
@@ -1148,7 +1367,7 @@ console.log("run nodejs")`,
 
           if (this.is_create === true) {
             delete this.task.id;
-            createtask(this.task).then(response => {
+            createtask(this.task).then((response) => {
               if (response.code === 0) {
                 Message.success(`创建任务 ${this.task.name} 成功`);
                 this.getalltask();
@@ -1163,7 +1382,7 @@ console.log("run nodejs")`,
             var name = this.task.name;
 
             delete this.task.task_data.langdesc;
-            changetask(this.task).then(response => {
+            changetask(this.task).then((response) => {
               if (response.code === 0) {
                 Message.success(`修改任务 ${name} 成功`);
                 this.getalltask();
@@ -1180,9 +1399,9 @@ console.log("run nodejs")`,
     },
     startdeletetask(task) {
       var deldata = {
-        id: task.id
+        id: task.id,
       };
-      deletetask(deldata).then(response => {
+      deletetask(deldata).then((response) => {
         if (response.code === 0) {
           this.getalltask();
           Message.success(`删除任务${task.name}成功`);
@@ -1193,9 +1412,9 @@ console.log("run nodejs")`,
     },
     startkilltask(task) {
       var killdata = {
-        id: task.id
+        id: task.id,
       };
-      killtask(killdata).then(response => {
+      killtask(killdata).then((response) => {
         if (response.code === 0) {
           Message.success(`终止任务 ${task.name} 成功`);
         } else {
@@ -1205,9 +1424,9 @@ console.log("run nodejs")`,
     },
     startruntask(task) {
       var rundata = {
-        id: task.id
+        id: task.id,
       };
-      runtask(rundata).then(response => {
+      runtask(rundata).then((response) => {
         if (response.code === 0) {
           Message.success(`任务 ${task.name} 已经开始运行`);
         } else {
@@ -1221,10 +1440,10 @@ console.log("run nodejs")`,
     edit_header() {
       this.saveapi.header["Content-Type"] = this.content_type;
     },
-    codeinitEditor: function(editor) {
+    codeinitEditor: function (editor) {
       editor.setAutoScrollEditorIntoView(true);
       editor.setShowPrintMargin(false);
-      editor.on("dblclick", function() {
+      editor.on("dblclick", function () {
         editor.container.webkitRequestFullscreen();
       });
       require("brace/ext/language_tools");
@@ -1236,10 +1455,10 @@ console.log("run nodejs")`,
       require("brace/mode/golang");
       require("brace/theme/solarized_dark");
     },
-    realloginitEditor: function(editor) {
+    realloginitEditor: function (editor) {
       editor.setAutoScrollEditorIntoView(true);
       editor.setShowPrintMargin(false);
-      editor.on("change", function() {
+      editor.on("change", function () {
         editor.renderer.scrollToLine(Number.POSITIVE_INFINITY);
       });
       // require("brace/ext/language_tools");
@@ -1251,7 +1470,7 @@ console.log("run nodejs")`,
       // require("brace/mode/golang");
       require("brace/theme/solarized_dark");
     },
-    rowreqbodyinitEditor: function(editor) {
+    rowreqbodyinitEditor: function (editor) {
       editor.setAutoScrollEditorIntoView(true);
       editor.setShowPrintMargin(false);
 
@@ -1332,13 +1551,13 @@ console.log("run nodejs")`,
       this.getselect();
     },
     getselect() {
-      getselecttask().then(response => {
+      getselecttask().then((response) => {
         this.taskselect = response.data;
       });
-      getselecthostgroup().then(response => {
+      getselecthostgroup().then((response) => {
         this.hostgroupselect = response.data;
       });
-      getselectuser().then(response => {
+      getselectuser().then((response) => {
         this.userselect = response.data;
       });
     },
@@ -1380,7 +1599,7 @@ console.log("run nodejs")`,
           if (key !== "Content-Type") {
             this.headerlist.push({
               key: key,
-              value: this.saveapi.header[key]
+              value: this.saveapi.header[key],
             });
           }
         }
@@ -1396,11 +1615,11 @@ console.log("run nodejs")`,
           // testetet=tetetstet&tetste=12121
           this.formlist = [];
           if (this.saveapi.payload !== "") {
-            this.saveapi.payload.split("&").forEach(item => {
+            this.saveapi.payload.split("&").forEach((item) => {
               var v = item.split("=");
               this.formlist.push({
                 key: v[0],
-                value: v[1]
+                value: v[1],
               });
             });
           }
@@ -1424,7 +1643,7 @@ console.log("run nodejs")`,
       this.runningInterval = setInterval(this.getrundatafunc, 5000);
     },
     getrundatafunc(query) {
-      getrunningtasks(query).then(resp => {
+      getrunningtasks(query).then((resp) => {
         this.runningdata = resp.data;
         this.pagecount = resp.count;
       });
@@ -1459,10 +1678,10 @@ console.log("run nodejs")`,
 
       this.trsocket = new WebSocket(wsurl);
 
-      this.trsocket.onopen = event => {
+      this.trsocket.onopen = (event) => {
         this.trsocket.send(token);
       };
-      this.trsocket.onmessage = event => {
+      this.trsocket.onmessage = (event) => {
         this.runtaskdata = JSON.parse(event.data);
         this.trsocket.send("ok");
       };
@@ -1490,7 +1709,7 @@ console.log("run nodejs")`,
       var tasktype = {
         1: "主任务",
         2: "父任务",
-        3: "子任务"
+        3: "子任务",
       };
       this.realtasklogtitle = `${tasktype[data.tasktype]} ${data.name}[${
         data.id
@@ -1512,10 +1731,10 @@ console.log("run nodejs")`,
       console.log(`start conn websocket ${wsurl}`);
       this.tlsocket = new WebSocket(wsurl);
       console.log(this.tlsocket);
-      this.tlsocket.onopen = event => {
+      this.tlsocket.onopen = (event) => {
         this.tlsocket.send(token);
       };
-      this.tlsocket.onmessage = event => {
+      this.tlsocket.onmessage = (event) => {
         // this.runtaskdata = JSON.parse(event.data);
         this.realtasklog = this.realtasklog + event.data;
         this.tlsocket.send("ok");
@@ -1537,13 +1756,13 @@ console.log("run nodejs")`,
     startclonetask() {
       var reqdata = {
         id: this.cloneid,
-        name: this.clonenewname
+        name: this.clonenewname,
       };
       if (this.clonenewname === "") {
         Message.warning("请输入新的任务名称");
         return;
       }
-      clonetask(reqdata).then(resp => {
+      clonetask(reqdata).then((resp) => {
         if (resp.code === 0) {
           Message.success(`克隆任务成功`);
           this.clonevisible = false;
@@ -1552,8 +1771,8 @@ console.log("run nodejs")`,
           Message.error(`克隆任务失败 ${resp.msg}`);
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -1568,5 +1787,18 @@ console.log("run nodejs")`,
   font-family: "Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif";
   // margin-bottom: 6px;
   font-weight: 700;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409EFF;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+.demonstration {
+  display: block;
+  color: #8492a6;
+  font-size: 14px;
+  margin-bottom: 20px;
 }
 </style>

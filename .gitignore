@@ -3,5 +3,6 @@
 .vscode
 *.db
 web/node_modules
+web/crocodile
 *.pem
 build/*

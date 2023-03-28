@@ -251,8 +251,5 @@ func tryDisConn(gRPCServer *grpc.Server, httpServer *http.Server, mode define.Ru
 			//time.Sleep(time.Second * 11)
 			os.Exit(0)
 		}
-
-	default:
-		log.Info("No signals")
 	}
 }

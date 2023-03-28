@@ -278,7 +278,7 @@ func getTasks(ctx context.Context,
 	}
 	if presearchname != "" {
 		getsql += " AND t.name LIKE ?"
-		args = append(args, presearchname+"%")
+		args = append(args, "%"+presearchname+"%")
 	}
 	if createbyid != "" {
 		getsql += " AND t.createByID=?"

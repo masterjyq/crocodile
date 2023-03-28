@@ -106,7 +106,7 @@
               <el-button
                 :disabled="scope.row.addrs.length === 0"
                 type="success"
-                size="small"
+                size="mini"
                 slot="reference"
                 round
               >

@@ -31,10 +31,8 @@ port = 8080
 maxhttptime = "10s" # 秒
 [server.db]
 # mysql: [username[:password]@][protocol[(address)]]/dbname[?param1=value1&...&paramN=valueN]
-#        root:123456@tcp(localhost:3306)/crocodile?charset=utf8mb4&parseTime=True&loc=Local
-#        mysql需要提前建好数据库
 drivename = "mysql"
-dsn = "root:crocodile@tcp(127.0.0.1:3306)/crocodile?charset=utf8mb4&parseTime=True&loc=Local"
+dsn = "root:123456@tcp(10.50.53.35:32428)/crocodile?charset=utf8mb4&parseTime=True&loc=Local"
 
 # sqlite3暂时不支持
 # sqlite3: crocodile.db 
@@ -45,7 +43,7 @@ maxconn = 20
 maxquerytime = "10s"
 
 [server.redis]
-addr = "127.0.0.1:6379"
+addr = "10.29.189.171:31928"
 password = ""
 # 消息通知配置
 [notify]

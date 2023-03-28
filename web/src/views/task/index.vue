@@ -693,8 +693,8 @@
       </div>
     </div>
     <div v-else>
-    <el-form :inline="true" label-width="80px">
-      <div style="float: left" >
+      <el-form :inline="true" label-width="80px">
+        <div style="float: left">
           <el-form-item label="任务名称">
             <el-input
               v-model="query.psname"
@@ -704,9 +704,8 @@
               style="width: 200px; margin-right: 1px"
             ></el-input>
           </el-form-item>
-      </div>
-      <div style="float: right">
-
+        </div>
+        <div style="float: right">
           <el-form-item>
             <el-tooltip
               v-if="query.self === false"
@@ -769,8 +768,8 @@
               >
             </el-tooltip>
           </el-form-item>
-      </div>
-              </el-form>
+        </div>
+      </el-form>
       <el-table
         v-loading="listLoading"
         :data="data"
@@ -786,11 +785,12 @@
           min-width="100"
         >
           <template slot-scope="scope">
-              <el-button
-                type="text"
-                size="mini"
-                @click="changetaskpre(scope.row)"
-                >{{ scope.row.name }}</el-button>
+            <el-button
+              type="text"
+              size="mini"
+              @click="changetaskpre(scope.row)"
+              >{{ scope.row.name }}</el-button
+            >
             <!-- <span>{{ scope.row.name }}</span> -->
           </template>
         </el-table-column>
@@ -863,55 +863,66 @@
             <span>{{ scope.row.remark }}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作" width="50">
+        <el-table-column fixed="right" align="center" label="操作" width="120">
           <template v-slot="scope">
+            <el-button-group>
+                  <el-button type="success" size="mini">
+                    <router-link
+                      :to="{ name: 'Log', query: { name: scope.row.name } }"
+                    >
+                    日志
+                    </router-link>
+                  </el-button>
+                  <el-button
+                    type="primary"
+                    size="mini"
+                    title="立即运行任务?"
+                    @click="runOpen(scope.row)">
+                    运行
+                    </el-button> 
+            </el-button-group>                 
             <el-dropdown size="medium" trigger="click">
               <span class="el-dropdown-link">
                 <i class="el-icon-more"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
-                    <el-button
-                      type="text"
-                      size="medium"
-                      @click="
-                        (clonevisible = true),
-                          (clonename = scope.row.name),
-                          (cloneid = scope.row.id),
-                          (clonenewname = '')
-                      "
-                      >克隆任务</el-button
-                    >
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-popconfirm
-                    @confirm="startdeletetask(scope.row)"
-                    :hideIcon="true"
-                    title="删除任务后对应的任务日志也会被删除，确定删除任务?"
-                  >
-                    <template v-slot:reference>
-                      <el-button type="text" size="medium">删除任务</el-button>
-                    </template>
-                  </el-popconfirm>
-                </el-dropdown-item>
-                <el-dropdown-item>
                   <el-button type="text" size="medium">
                     <router-link
                       :to="{ name: 'Log', query: { name: scope.row.name } }"
-                      >查看日志</router-link
                     >
+                      查看日志
+                    </router-link>
                   </el-button>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-popconfirm
-                    @confirm="startruntask(scope.row)"
-                    :hideIcon="true"
-                    title="立即运行任务?"
+                  <el-button
+                    type="text"
+                    size="medium"
+                    @click="runOpen(scope.row)">
+                    立即运行
+                    </el-button>
+                </el-dropdown-item>                
+                <el-dropdown-item>
+                  <el-button
+                    type="text"
+                    size="medium"
+                    @click="
+                      (clonevisible = true),
+                        (clonename = scope.row.name),
+                        (cloneid = scope.row.id),
+                        (clonenewname = '')
+                    "
+                    >克隆任务</el-button
                   >
-                    <template v-slot:reference>
-                      <el-button type="text" size="medium">立即运行</el-button>
-                    </template>
-                  </el-popconfirm>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    type="text"
+                    size="medium"
+                    @click="deleteOpen(scope.row)"
+                    >删除任务</el-button
+                  >
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -1397,6 +1408,21 @@ console.log("run nodejs")`,
         }
       });
     },
+    deleteOpen(task) {
+      this.$confirm("此操作将永久删除该任务, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          debugger;
+          this.startdeletetask(task);
+        })
+        .catch((e) => {
+          console.log(e);
+          Message.info("删除失败!");
+        });
+    },
     startdeletetask(task) {
       var deldata = {
         id: task.id,
@@ -1421,6 +1447,20 @@ console.log("run nodejs")`,
           Message.error(`终止任务 ${task.name} 失败: ${response.msg}`);
         }
       });
+    },
+    runOpen(task) {
+      this.$confirm("立即运行任务?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.startruntask(task);
+        })
+        .catch(() => {
+          console.log(e);
+          Message.info("运行失败!");
+        });
     },
     startruntask(task) {
       var rundata = {
@@ -1790,7 +1830,7 @@ console.log("run nodejs")`,
 }
 .el-dropdown-link {
   cursor: pointer;
-  color: #409EFF;
+  color: #409eff;
 }
 .el-icon-arrow-down {
   font-size: 12px;

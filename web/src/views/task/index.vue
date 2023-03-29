@@ -834,7 +834,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="超时(s)" width="50">
+        <el-table-column align="center" label="超时(s)" width="70">
           <template slot-scope="scope">
             <span v-if="scope.row.timeout === -1">-</span>
             <span v-else>{{ scope.row.timeout }}</span>

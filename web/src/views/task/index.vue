@@ -290,6 +290,144 @@
               </div>
             </ul>
           </div>
+          <div v-if="task.task_type === 3">
+            <ul>
+              <div>
+                <el-table
+                  size="mini"
+                  :data="methodurl"
+                  style="width: 100%"
+                  empty-text="please press add new"
+                >
+                  <el-table-column label="Method" min-width="30px;">
+                    <template slot-scope="scope">
+                      <el-select
+                        :disabled="is_preview"
+                        size="mini"
+                        v-model="savesql.datatype"
+                        placeholder="请选择数据库类型"
+                      >
+                        <el-option
+                          v-for="item in datatypeoption"
+                          :key="item.label"
+                          :label="item.label"
+                          :value="item.value"
+                        ></el-option>
+                      </el-select>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="开启事务" min-width="20px;">
+                    <template slot-scope="scope">
+                      <el-switch
+                        :disabled="is_preview"
+                        v-model="savesql.opentx"
+                        size="mini">
+                      </el-switch>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Host" min-width="100px;">
+                    <template slot-scope="scope">
+                      <el-input
+                        :disabled="is_preview"
+                        size="mini"
+                        v-model="savesql.host"
+                      ></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Port" min-width="30px;">
+                    <template slot-scope="scope">
+                      <el-input
+                        :disabled="is_preview"
+                        size="mini"
+                        v-model="savesql.port"
+                      ></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="用户名" min-width="50px;">
+                    <template slot-scope="scope">
+                      <el-input
+                        :disabled="is_preview"
+                        size="mini"
+                        v-model="savesql.user"
+                      ></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="密码" min-width="50px;">
+                    <template slot-scope="scope">
+                      <el-input
+                        type="password"
+                        :disabled="is_preview"
+                        size="mini"
+                        v-model="savesql.password"
+                      ></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="数据库" min-width="30px;">
+                    <template slot-scope="scope">
+                      <el-input
+                        :disabled="is_preview"
+                        size="mini"
+                        v-model="savesql.database"
+                      ></el-input>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div>
+                <el-table
+                  size="mini"
+                  :data="sqllist"
+                  style="width: 100%"
+                  empty-text=" "
+                >
+                  <el-table-column
+                    prop="name"
+                    label="执行的SQL"
+                    min-width="100px;"
+                  >
+                    <template slot-scope="scope">
+                      <editor
+                        v-model="sqllist[scope.$index].value"
+                        theme="solarized_dark"
+                        lang="sql"
+                        height="100"
+                        @init="codeinitEditor"
+                        :options="{
+                          readOnly: is_preview,
+                          wrap: 'free',
+                          indentedSoftWrap: false,
+                          enableBasicAutocompletion: true,
+                          enableSnippets: true,
+                          enableLiveAutocompletion: true,
+                        }"
+                      ></editor>
+                    </template>
+                  </el-table-column>
+                  <el-table-column width="70px;">
+                    <template slot-scope="scope">
+                      <el-button
+                        :disabled="is_preview"
+                        size="mini"
+                        @click="deletesqlRow(scope.$index)"
+                        icon="el-icon-delete"
+                        type="info"
+                        circle
+                      ></el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div style="margin-left: 11px">
+                  <el-button
+                    :disabled="is_preview"
+                    type="info"
+                    size="mini"
+                    @click="addsql"
+                    >Add New</el-button
+                  >
+                </div>
+              </div>
+            </ul>
+          </div>
         </div>
         <el-row>
           <el-col :span="11">
@@ -338,7 +476,7 @@
                 multiple
                 filterable
                 v-model="task.child_taskids"
-                multiple-limit="20"
+                :multiple-limit="20"
               >
                 <el-option
                   v-for="item in taskselect"
@@ -443,7 +581,7 @@
             multiple
             filterable
             v-model="task.alarm_userids"
-            multiple-limit="10"
+            :multiple-limit="10"
           >
             <el-option
               v-for="item in userselect"
@@ -1101,6 +1239,10 @@ export default {
           value: 2,
           label: "API",
         },
+        {
+          value: 3,
+          label: "SQL",
+        },
       ],
       parallelrun: [
         {
@@ -1219,6 +1361,22 @@ export default {
         payload: "",
         header: {},
       },
+      savesql: {
+        opentx: true,
+        datatype: "mysql",
+        host: "",
+        port: "",
+        database: "",
+        user: "",
+        password: "",
+        sqldata: [],
+      },
+      datatypeoption:[
+        {
+          value: "mysql",
+          label: "Mysql",
+        },
+      ],
       method: "",
       url: "",
       methodoption: [
@@ -1259,6 +1417,7 @@ export default {
         },
       ],
       headerlist: [{}],
+      sqllist: [{}],
       methodurl: [{}],
       content_typetable: [{}],
       formlist: [{}],
@@ -1372,6 +1531,11 @@ console.log("run nodejs")`,
               }
             }
             this.task.task_data = this.saveapi;
+          } else if (this.task.task_type === 3) {
+            this.sqllist.forEach((item) =>{
+               this.savesql.sqldata = [...this.savesql.sqldata,item.value]
+            });
+            this.task.task_data = this.savesql;
           } else {
             console.log("err: support task type", this.task.task_type);
           }
@@ -1494,6 +1658,8 @@ console.log("run nodejs")`,
       // require("brace/mode/json");
       require("brace/mode/golang");
       require("brace/theme/solarized_dark");
+      require('brace/mode/sql')
+      require('brace/snippets/sql')
     },
     realloginitEditor: function (editor) {
       editor.setAutoScrollEditorIntoView(true);
@@ -1526,8 +1692,14 @@ console.log("run nodejs")`,
     addheader() {
       this.headerlist.push({});
     },
+    addsql() {
+      this.sqllist.push({});
+    },    
     deleteheaderRow(index) {
       this.headerlist.splice(index, 1);
+    },
+    deletesqlRow(index) {
+      this.sqllist.splice(index, 1);
     },
     addform() {
       this.formlist.push({});
@@ -1552,6 +1724,11 @@ console.log("run nodejs")`,
           this.task.expect_code = 200;
         }
         this.task.task_data = this.saveapi;
+      } else if (this.task.task_type === 3) {
+        if (this.is_create === true) {
+          this.task.expect_code = 0;
+        }
+        this.task.task_data = this.savesql;
       }
     },
     createtaskpre() {
@@ -1583,6 +1760,7 @@ console.log("run nodejs")`,
       this.jsonplayload = "";
 
       this.headerlist = [{}];
+      this.sqllist = [{}];
       this.methodurl = [{}];
       this.content_typetabl = [{}];
       this.formlist = [{}];
@@ -1666,6 +1844,18 @@ console.log("run nodejs")`,
           if (this.formlist.length === 0) {
             this.formlist.push({});
           }
+        }
+      }
+      if (this.task.task_type === 3) {
+        this.savesql = this.task.task_data;
+        if(this.savesql.sqldata){
+          this.sqllist = [];
+          this.savesql.sqldata.forEach((item) =>{
+          this.sqllist.push({
+              value: item,
+            });
+          })
+          console.log(this.savesql)
         }
       }
     },

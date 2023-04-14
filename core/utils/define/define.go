@@ -41,6 +41,8 @@ const (
 	Code TaskType = iota + 1
 	// API run http req
 	API
+	// sql
+	SQL
 )
 
 func (tt TaskType) String() string {
@@ -49,6 +51,8 @@ func (tt TaskType) String() string {
 		return "code"
 	case API:
 		return "api"
+	case SQL:
+		return "sql"
 	default:
 		return "unknow"
 	}

@@ -46,7 +46,13 @@ func GetDataRun(t *pb.TaskReq) (TaskRuner, error) {
 			api.Header = make(map[string]string)
 		}
 		return api, err
-
+	case define.SQL:
+		var sql DataSQL
+		err := json.Unmarshal(t.TaskData, &sql)
+		if err != nil {
+			return nil, err
+		}
+		return sql, err
 	default:
 		err := fmt.Errorf("Unsupport TaskType %d", t.TaskType)
 		return nil, err

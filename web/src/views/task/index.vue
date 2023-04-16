@@ -934,7 +934,7 @@
         </el-table-column>
         <el-table-column align="center" label="任务类型" width="150">
           <template slot-scope="scope">
-            <span v-if="scope.row.task_type == 1">
+            <span v-if="scope.row.task_type === 1">
               <el-tag size="small" type="warning">{{
                 scope.row.task_typedesc
               }}</el-tag>
@@ -942,12 +942,20 @@
                 scope.row.task_data.langdesc
               }}</el-tag>
             </span>
+            <span  v-if="scope.row.task_type === 2">
+              <el-tag size="small" type="warning">{{
+                  scope.row.task_typedesc
+                }}</el-tag>
+              <el-tag size="small" type="danger">{{
+                  scope.row.task_data.method
+                }}</el-tag>
+            </span>
             <span v-else>
               <el-tag size="small" type="warning">{{
                 scope.row.task_typedesc
               }}</el-tag>
               <el-tag size="small" type="danger">{{
-                scope.row.task_data.method
+                scope.row.task_data.datatype
               }}</el-tag>
             </span>
           </template>
@@ -1017,8 +1025,8 @@
                     title="立即运行任务?"
                     @click="runOpen(scope.row)">
                     运行
-                    </el-button> 
-            </el-button-group>                 
+                    </el-button>
+            </el-button-group>
             <el-dropdown size="medium" trigger="click">
               <span class="el-dropdown-link">
                 <i class="el-icon-more"></i>
@@ -1040,7 +1048,7 @@
                     @click="runOpen(scope.row)">
                     立即运行
                     </el-button>
-                </el-dropdown-item>                
+                </el-dropdown-item>
                 <el-dropdown-item>
                   <el-button
                     type="text"
@@ -1532,8 +1540,9 @@ console.log("run nodejs")`,
             }
             this.task.task_data = this.saveapi;
           } else if (this.task.task_type === 3) {
+            this.savesql.sqldata = []
             this.sqllist.forEach((item) =>{
-               this.savesql.sqldata = [...this.savesql.sqldata,item.value]
+               this.savesql.sqldata.push(item.value)
             });
             this.task.task_data = this.savesql;
           } else {
@@ -1694,7 +1703,7 @@ console.log("run nodejs")`,
     },
     addsql() {
       this.sqllist.push({});
-    },    
+    },
     deleteheaderRow(index) {
       this.headerlist.splice(index, 1);
     },
@@ -1757,6 +1766,7 @@ console.log("run nodejs")`,
       this.is_create = true;
       this.savecode = { lang: 1, code: "" };
       this.saveapi = { url: "", method: "GET", payload: "", header: {} };
+      this.savesql = {opentx: true, datatype: "mysql", host: "", port: "", database: "", user: "", password: "", sqldata: [],};
       this.jsonplayload = "";
 
       this.headerlist = [{}];
@@ -1847,16 +1857,13 @@ console.log("run nodejs")`,
         }
       }
       if (this.task.task_type === 3) {
-        this.savesql = this.task.task_data;
-        if(this.savesql.sqldata){
-          this.sqllist = [];
-          this.savesql.sqldata.forEach((item) =>{
-          this.sqllist.push({
-              value: item,
-            });
-          })
-          console.log(this.savesql)
-        }
+        this.savesql = task.task_data;
+        this.sqllist = [];
+        this.savesql.sqldata.forEach((item) =>{
+        this.sqllist.push({
+            value: item,
+          });
+        })
       }
     },
     previewtaskpre(task) {

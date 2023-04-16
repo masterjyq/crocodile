@@ -43,14 +43,13 @@ func (da DataSQL) Run(ctx context.Context) io.ReadCloser {
 		var exitCode = DefaultExitCode
 		defer pw.Close()
 		defer func() {
-			now := time.Now().Local().Format("2006-01-02 15:04:05: ")
-			pw.Write([]byte(fmt.Sprintf("\n%sRun Finished,Return Code:%5d", now, exitCode))) // write exitCode,total 5 byte
-			// pw.Write([]byte(fmt.Sprintf("%3d", exitCode))) // write exitCode,total 3 byte
+			writeLog(pw, fmt.Sprintf("Run Finished,Return Code:%5d", exitCode))
 		}()
 		// 初始化连接
-		db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s)", da.User, da.PassWord, da.Host, da.Port, da.DataBase))
+		db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", da.User, da.PassWord, da.Host, da.Port, da.DataBase))
 		if err != nil {
 			log.Error("Open Data Base failed", zap.Error(err))
+			writeLog(pw, fmt.Sprintf("Open Data Base failed: %s", zap.Error(err)))
 			return
 		}
 		defer db.Close()
@@ -60,20 +59,22 @@ func (da DataSQL) Run(ctx context.Context) io.ReadCloser {
 			tx, err := db.Begin()
 			if err != nil {
 				log.Error("Open Tx failed", zap.Error(err))
+				writeLog(pw, fmt.Sprintf("Open Tx failed: %s", zap.Error(err)))
 				return
 			}
 			for i, sqlString := range da.SqlData {
 				sqlRes, err := tx.Exec(sqlString)
 				if err != nil {
-					log.Error("Exec SQL And Tx failed ", zap.Error(err))
+					log.Error("Exec SQL With Tx failed ", zap.Error(err))
 					return
 				}
-				now := time.Now().Local().Format("2006-01-02 15:04:05: ")
-				pw.Write([]byte(fmt.Sprintf("\n%sRun Sql And Tx %d Success,Return :%s", now, i, sqlRes)))
+				rows, _ := sqlRes.RowsAffected()
+				writeLog(pw, fmt.Sprintf("Run Sql %d With Tx Success,Number of rows affected :%d", i, rows))
 			}
 			err = tx.Commit()
 			if err != nil {
 				log.Error("Tx Commit failed", zap.Error(err))
+				writeLog(pw, fmt.Sprintf("Tx Commit failed: %s", zap.Error(err)))
 				return
 			}
 		} else {
@@ -81,13 +82,19 @@ func (da DataSQL) Run(ctx context.Context) io.ReadCloser {
 				sqlRes, err := db.Exec(sqlString)
 				if err != nil {
 					log.Error("Exec SQL No Tx failed", zap.Error(err))
+					writeLog(pw, fmt.Sprintf("Exec SQL No Tx failed: %s", zap.Error(err)))
 					return
 				}
-				now := time.Now().Local().Format("2006-01-02 15:04:05: ")
-				pw.Write([]byte(fmt.Sprintf("\n%sRun Sql No Tx %d Success,Return :%s", now, i, sqlRes)))
+				rows, _ := sqlRes.RowsAffected()
+				writeLog(pw, fmt.Sprintf("Run Sql %d No Tx Success,Number of rows affected :%d", i, rows))
 			}
 		}
 		exitCode = 0
 	}()
 	return pr
+}
+
+func writeLog(pw *io.PipeWriter, log string) {
+	now := time.Now().Local().Format("2006-01-02 15:04:05: ")
+	pw.Write([]byte(fmt.Sprintf("\n%s %s", now, log)))
 }

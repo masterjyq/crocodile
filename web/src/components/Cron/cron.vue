@@ -41,7 +41,7 @@
         <el-breadcrumb separator="/">
           <el-breadcrumb-item>最近运行时间</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-timeline :reverse="reverse">
+        <el-timeline>
           <el-timeline-item
             v-for="(timestamp, index) in cronrecenttime"
             :key="index"

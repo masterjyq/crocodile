@@ -62,14 +62,15 @@ func (da DataSQL) Run(ctx context.Context) io.ReadCloser {
 				writeLog(pw, fmt.Sprintf("Open Tx failed: %s", zap.Error(err)))
 				return
 			}
-			for i, sqlString := range da.SqlData {
+			for _, sqlString := range da.SqlData {
 				sqlRes, err := tx.Exec(sqlString)
 				if err != nil {
-					log.Error("Exec SQL With Tx failed ", zap.Error(err))
+					log.Error("Exec SQL  With Tx failed ", zap.Error(err))
+					writeLog(pw, fmt.Sprintf("Exec SQL With Tx failed, SQL: %s, Err: %s", sqlString, zap.Error(err)))
 					return
 				}
 				rows, _ := sqlRes.RowsAffected()
-				writeLog(pw, fmt.Sprintf("Run Sql %d With Tx Success,Number of rows affected :%d", i, rows))
+				writeLog(pw, fmt.Sprintf("Exec Sql With Tx Success, SQL: %s, Number of rows affected: %d", sqlString, rows))
 			}
 			err = tx.Commit()
 			if err != nil {
@@ -78,15 +79,15 @@ func (da DataSQL) Run(ctx context.Context) io.ReadCloser {
 				return
 			}
 		} else {
-			for i, sqlString := range da.SqlData {
+			for _, sqlString := range da.SqlData {
 				sqlRes, err := db.Exec(sqlString)
 				if err != nil {
 					log.Error("Exec SQL No Tx failed", zap.Error(err))
-					writeLog(pw, fmt.Sprintf("Exec SQL No Tx failed: %s", zap.Error(err)))
+					writeLog(pw, fmt.Sprintf("Exec SQL No Tx failed, SQL: %s, Err: %s", sqlString, zap.Error(err)))
 					return
 				}
 				rows, _ := sqlRes.RowsAffected()
-				writeLog(pw, fmt.Sprintf("Run Sql %d No Tx Success,Number of rows affected :%d", i, rows))
+				writeLog(pw, fmt.Sprintf("Run Sql No Tx Success, SQL: %s, Number of rows affected: %d", sqlString, rows))
 			}
 		}
 		exitCode = 0

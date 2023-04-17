@@ -950,7 +950,7 @@
                   scope.row.task_data.method
                 }}</el-tag>
             </span>
-            <span v-else>
+            <span v-if="scope.row.task_type === 3">
               <el-tag size="small" type="warning">{{
                 scope.row.task_typedesc
               }}</el-tag>

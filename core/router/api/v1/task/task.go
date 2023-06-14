@@ -66,9 +66,10 @@ func CreateTask(c *gin.Context) {
 		return
 	}
 	// task.CreateByUID = c.GetString("uid")
-	task.Run = true
+	// 创建的时候可以不启用
+	// task.Run = true
 	id := utils.GetID()
-	err = model.CreateTask(ctx, id, task.Name, task.TaskType, task.TaskData, true, task.ParentTaskIds, task.ParentRunParallel,
+	err = model.CreateTask(ctx, id, task.Name, task.TaskType, task.TaskData, task.Run, task.ParentTaskIds, task.ParentRunParallel,
 		task.ChildTaskIds, task.ChildRunParallel, task.Cronexpr, task.Timeout, task.AlarmUserIds, task.RoutePolicy,
 		task.ExpectCode, task.ExpectContent, task.AlarmStatus, c.GetString("uid"), task.HostGroupID, task.Remark,
 	)
@@ -665,6 +666,13 @@ func RealRunTaskLog(c *gin.Context) {
 				log.Warn("task is not running ", zap.String("taskid", getid.ID))
 				return
 			}
+			// 检测还能不能连上前台
+			err = conn.WriteMessage(websocket.TextMessage, make([]byte, 0))
+			if err != nil {
+				log.Error("WriteMessage failed", zap.Error(err))
+				// 链接不上前台了
+				return
+			}
 			time.Sleep(time.Second)
 		} else {
 			var erroutput []byte
@@ -710,8 +718,11 @@ func RealRunTaskStatus(c *gin.Context) {
 	}
 	_, _, pass := middleware.CheckToken(string(token))
 	if !pass {
-		conn.WriteMessage(websocket.TextMessage, []byte("check token auth fail"))
-		return
+		_, pass = middleware.CheckCloudToken(string(token))
+		if !pass {
+			conn.WriteMessage(websocket.TextMessage, []byte("check token auth fail"))
+			return
+		}
 	}
 	task, ok := schedule.Cron2.GetTask(getid.ID)
 	if !ok {

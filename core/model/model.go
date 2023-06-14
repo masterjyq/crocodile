@@ -7,13 +7,29 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-redis/redis"
+
 	"github.com/labulaka521/crocodile/common/db"
 	"github.com/labulaka521/crocodile/common/log"
+	"github.com/labulaka521/crocodile/common/rediscli"
 	"github.com/labulaka521/crocodile/core/config"
 	"github.com/labulaka521/crocodile/core/utils/define"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
+
+func InitRedis() (err error) {
+	err = rediscli.NewRedis(&redis.Options{
+		Addr:     config.CoreConf.Server.Redis.Addr,
+		Password: config.CoreConf.Server.Redis.PassWord,
+		DB:       config.CoreConf.Server.Redis.DB,
+	})
+	if err != nil {
+		return
+	}
+	log.Info("InitRedis Success", zap.String("Addr", config.CoreConf.Server.Redis.Addr))
+	return
+}
 
 // InitDb init db
 func InitDb() error {
@@ -54,7 +70,7 @@ const (
 	HostGroupID
 	// CreateByID check use is used by hostgroup or tasks
 	CreateByID
-	// UserName check exist user name 
+	// UserName check exist user name
 	UserName
 )
 

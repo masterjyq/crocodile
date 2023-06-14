@@ -18,6 +18,7 @@ import (
 	"github.com/gorhill/cronexpr"
 	"github.com/labulaka521/crocodile/common/errgroup"
 	"github.com/labulaka521/crocodile/common/log"
+	"github.com/labulaka521/crocodile/common/rediscli"
 	"github.com/labulaka521/crocodile/common/utils"
 	"github.com/labulaka521/crocodile/core/alarm"
 	"github.com/labulaka521/crocodile/core/config"
@@ -939,16 +940,13 @@ type cacheSchedule2 struct {
 
 // Init2 start run already exists task from db
 func Init2() error {
-	client := redis.NewClient(&redis.Options{
-		Addr:     config.CoreConf.Server.Redis.Addr,
-		Password: config.CoreConf.Server.Redis.PassWord,
-	})
-
-	err := client.Ping().Err()
-	if err != nil {
-		log.Error("connect redis failed", zap.String("addr", config.CoreConf.Server.Redis.Addr))
-		return err
-	}
+	client := rediscli.GetRedisClient()
+	// 不用了， 在 GetRedisClient 处理过了
+	// err := client.Ping().Err()
+	// if err != nil {
+	// 	log.Error("connect redis failed", zap.String("addr", config.CoreConf.Server.Redis.Addr))
+	// 	return err
+	// }
 
 	Cron2 = &cacheSchedule2{
 		ts:    make(map[string]*task2),

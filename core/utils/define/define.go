@@ -373,6 +373,7 @@ type TaskResp struct {
 
 // Log task log
 type Log struct {
+	Id             int64        `json:"id"`                   // 主键
 	Name           string       `json:"name"`                 // task log
 	RunByTaskID    string       `json:"runby_taskid"`         // run taskid
 	StartTime      int64        `json:"start_time"`           // ms

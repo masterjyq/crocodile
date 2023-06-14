@@ -63,7 +63,7 @@ func SaveLog(ctx context.Context, l *define.Log) error {
 // GetLog get task resp log by taskid
 func GetLog(ctx context.Context, taskname string, status int, offset, limit int) ([]*define.Log, int, error) {
 	logs := []*define.Log{}
-	getsql := `SELECT 
+	getsql := `SELECT id,
 					name,
 					taskid,
 					starttime,
@@ -120,6 +120,7 @@ func GetLog(ctx context.Context, taskname string, status int, offset, limit int)
 		getlog := define.Log{}
 		taskrepos := []*define.TaskResp{}
 		err = rows.Scan(
+			&getlog.Id,
 			&getlog.Name,
 			&getlog.RunByTaskID,
 			&getlog.StartTime,
@@ -378,11 +379,10 @@ func GetOperate(ctx context.Context, uid, username, method, module string, limit
 	}
 
 	if len(query) > 0 {
-		getsql += "WHERE"
+		getsql += " WHERE "
 		getsql += strings.Join(query, "AND")
 	}
 	oplogs := make([]define.OperateLog, 0, limit)
-
 	if limit > 0 {
 		var err error
 		count, err = countColums(ctx, getsql, args...)
@@ -410,7 +410,6 @@ func GetOperate(ctx context.Context, uid, username, method, module string, limit
 		return oplogs, 0, fmt.Errorf("stmt.QueryContext failed: %w", err)
 	}
 	defer rows.Close()
-
 
 	for rows.Next() {
 		var (

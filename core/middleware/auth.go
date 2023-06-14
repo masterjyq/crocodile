@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/labulaka521/crocodile/common/jwt"
 	"github.com/labulaka521/crocodile/common/log"
+	"github.com/labulaka521/crocodile/common/rediscli"
 	"github.com/labulaka521/crocodile/core/config"
 	"github.com/labulaka521/crocodile/core/model"
 	"github.com/labulaka521/crocodile/core/utils/resp"
@@ -36,6 +38,34 @@ func CheckToken(token string) (string, string, bool) {
 	return claims.UID, claims.UserName, true
 }
 
+// CheckToken check token is valid
+func CheckCloudToken(token string) (string, bool) {
+	// todo 校验用户
+	client := rediscli.GetRedisClient()
+	val, err := client.Get("LOGGED_TOKEN_" + strings.ToUpper(token)).Result()
+	if err != nil {
+		log.Error("Check Cloud User Err", zap.Error(err))
+		return "", false
+	}
+	// 解析用户。获取用户ID
+	if val == "" {
+		log.Error("Check Cloud User Redis Not Fund")
+		return "", false
+	}
+	cloudUser := make(map[string]interface{}, 0)
+	err = json.Unmarshal([]byte(val), &cloudUser)
+	if err != nil {
+		log.Error("Convert Cloud User Err", zap.Error(err))
+		return "", false
+	}
+	account, ok := cloudUser["account"]
+	if !ok {
+		log.Error("Convert Cloud not fund account")
+		return "", false
+	}
+	return account.(string), true
+}
+
 // 权限检查
 func checkAuth(c *gin.Context) (pass bool, err error) {
 	token := strings.TrimPrefix(c.GetHeader("Authorization"), tokenpre)
@@ -47,18 +77,32 @@ func checkAuth(c *gin.Context) (pass bool, err error) {
 
 	uid, username, pass := CheckToken(token)
 	if !pass {
-		return false, errors.New("CheckToken failed")
+		// 校验是不是cloud的用户
+		username, pass = CheckCloudToken(token)
+		if !pass {
+			log.Error("CheckToken failed")
+			return false, errors.New("CheckToken failed")
+		}
+		// uid 查找
+		sql := fmt.Sprintf("crocodile_user where name = '%s'", username)
+		userArray, err := model.GetNameID(c, sql)
+		if err != nil || len(userArray) == 0 {
+			log.Error("crocodile not has user", zap.Error(err))
+			return false, errors.New("crocodile not has user:" + username)
+		}
+		// 得到ID
+		uid = userArray[0].Value
 	}
 
 	c.Set("uid", uid)
 	c.Set("username", username)
-
 	ctx, cancel := context.WithTimeout(context.Background(),
 		config.CoreConf.Server.DB.MaxQueryTime.Duration)
 	defer cancel()
 
 	ok, err := model.Check(ctx, model.TBUser, model.UID, uid)
 	if err != nil {
+		log.Error("Check failed", zap.Error(err))
 		return false, err
 	}
 	if !ok {

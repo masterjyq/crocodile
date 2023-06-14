@@ -36,6 +36,10 @@ func Server() *cobra.Command {
 			if err != nil {
 				log.Fatal("InitDb failed", zap.Error(err))
 			}
+			err = model.InitRedis()
+			if err != nil {
+				log.Fatal("InitRedis failed", zap.Error(err))
+			}
 			model.InitRabc()
 			go version.CheckLatest() // check new version
 		},

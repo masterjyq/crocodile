@@ -57,7 +57,7 @@ func RegistryUser(c *gin.Context) {
 		return
 	}
 
-	err = model.AddUser(ctx, ruser.Name, hashpassword, ruser.Role)
+	err = model.AddUser(ctx, ruser.Name, hashpassword, ruser.Role, ruser.Remark)
 	if err != nil {
 		log.Error("AddUser failed", zap.Error(err))
 		resp.JSON(c, resp.ErrInternalServer, nil)

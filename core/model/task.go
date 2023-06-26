@@ -87,7 +87,7 @@ func CreateTask(ctx context.Context, id, name string, tasktype define.TaskType, 
 }
 
 // ChangeTask change task
-func ChangeTask(ctx context.Context, id string, run bool, tasktype define.TaskType, taskData interface{},
+func ChangeTask(ctx context.Context, id string, run bool, taskType define.TaskType, taskData interface{},
 	parentTaskIds []string, parentRunParallel bool, childTaskIds []string, childRunParallel bool,
 	cronExpr string, timeout int, alarmUserIds []string, routePolicy define.RoutePolicy, expectCode int,
 	expectContent string, alarmStatus define.AlarmStatus, hostGroupID, remark string) error {
@@ -123,10 +123,26 @@ func ChangeTask(ctx context.Context, id string, run bool, tasktype define.TaskTy
 	updateTime := time.Now().Unix()
 	taskdata, _ := json.Marshal(taskData)
 
+	// 前台不修改密码, 数据库密码是不会传到后台
+	if taskType == 3 {
+		var sql tasktype.DataSQL
+		json.Unmarshal(taskdata, &sql)
+		if sql.PassWord == "" {
+			// 查找旧的
+			oldTask, err := GetTaskByID(ctx, id)
+			if err != nil {
+				return fmt.Errorf("get Old Task failed: %w", err)
+			}
+			if sqlData, ok := oldTask.TaskData.(tasktype.DataSQL); ok {
+				sql.PassWord = sqlData.PassWord
+				taskdata, _ = json.Marshal(sql)
+			}
+		}
+	}
 	_, err = stmt.ExecContext(ctx,
 		hostGroupID,
 		run,
-		tasktype,
+		taskType,
 		fmt.Sprintf("%s", taskdata),
 		strings.Join(parentTaskIds, ","),
 		parentRunParallel,
@@ -250,6 +266,7 @@ func getTasks(ctx context.Context,
 					t.expectContent,
 					t.alarmStatus,
 					u.name,
+					u.remark,
 					t.createByID,
 					hg.name,
 					t.hostGroupID,
@@ -336,6 +353,7 @@ func getTasks(ctx context.Context,
 			&t.ExpectContent,
 			&t.AlarmStatus,
 			&t.CreateBy,
+			&t.CreateByName,
 			&t.CreateByUID,
 			&t.HostGroup,
 			&t.HostGroupID,

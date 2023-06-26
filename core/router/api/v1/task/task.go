@@ -21,6 +21,7 @@ import (
 	"github.com/labulaka521/crocodile/core/middleware"
 	"github.com/labulaka521/crocodile/core/model"
 	"github.com/labulaka521/crocodile/core/schedule"
+	"github.com/labulaka521/crocodile/core/tasktype"
 	"github.com/labulaka521/crocodile/core/utils/define"
 	"github.com/labulaka521/crocodile/core/utils/resp"
 	"go.uber.org/zap"
@@ -33,7 +34,7 @@ import (
 // @Param Task body define.CreateTask true "create task"
 // @Success 200 {object} resp.Response
 // @Router /api/v1/task [post]
-// @Security ApiKeyAuth
+// @Security ApiKeyAuthpip
 func CreateTask(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(),
 		config.CoreConf.Server.DB.MaxQueryTime.Duration)
@@ -322,6 +323,16 @@ func GetTasks(c *gin.Context) {
 		createby = c.GetString("uid")
 	}
 	hgs, count, err := model.GetTasks(ctx, q.Offset, q.Limit, "", q.PSName, createby)
+	// 数据脱敏
+	for i := 0; i < len(hgs); i++ {
+		if hgs[i].TaskType == 3 {
+			// 数据库密码脱敏
+			if sqlData, ok := hgs[i].TaskData.(tasktype.DataSQL); ok {
+				sqlData.PassWord = ""
+				hgs[i].TaskData = sqlData
+			}
+		}
+	}
 	if err != nil {
 		log.Error("GetTasks failed", zap.Error(err))
 		resp.JSON(c, resp.ErrInternalServer, nil)

@@ -281,6 +281,7 @@ type GetTask struct {
 	ChildTaskIdsDesc  []string    `json:"child_taskidsdesc"  comment:"子任务"`
 	ChildRunParallel  bool        `json:"child_runparallel" comment:"子任务运行策略"`
 	CreateBy          string      `json:"create_by"`
+	CreateByName      string      `json:"create_byname"`
 	CreateByUID       string      `json:"create_byuid"`
 	HostGroup         string      `json:"host_group" comment:"主机组"`
 	HostGroupID       string      `json:"host_groupid"`

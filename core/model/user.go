@@ -58,13 +58,14 @@ func LoginUser(ctx context.Context, name string, password string) (string, error
 }
 
 // AddUser add new user
-func AddUser(ctx context.Context, name, hashpassword string, role define.Role) error {
+func AddUser(ctx context.Context, name, hashpassword string, role define.Role, remark string) error {
 	adduser := `INSERT INTO crocodile_user (
 					id,
 					name,
 					hashpassword,
 					role,
 					forbid,
+					remark,
 					createTime,
 					updateTime
 				)
@@ -84,7 +85,7 @@ func AddUser(ctx context.Context, name, hashpassword string, role define.Role) e
 
 	now := time.Now().Unix()
 	id := utils.GetID()
-	_, err = stmt.ExecContext(ctx, id, name, hashpassword, role, false, now, now)
+	_, err = stmt.ExecContext(ctx, id, name, hashpassword, role, false, remark, now, now)
 	if err != nil {
 		return fmt.Errorf("stmt.ExecContext failed: %w", err)
 	}

@@ -150,7 +150,7 @@ func StartInstall(ctx context.Context, username, password string) error {
 	if err != nil {
 		return fmt.Errorf("utils.GenerateHashPass failed: %w", err)
 	}
-	err = AddUser(ctx, username, hashpassword, define.AdminUser)
+	err = AddUser(ctx, username, hashpassword, define.AdminUser, "管理员")
 	if err != nil {
 		return fmt.Errorf("AddUser failed: %w", err)
 	}

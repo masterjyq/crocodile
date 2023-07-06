@@ -113,6 +113,10 @@ func NewHTTPRouter() *http.Server {
 		rt.GET("/cron", task.ParseCron)
 		rt.GET("/select", task.GetSelect)
 	}
+	rtg := v1.Group("/taskgroup")
+	{
+		rtg.GET("", task.GetTaskGroup)
+	}
 	rh := v1.Group("/host")
 	{
 		rh.GET("", host.GetHost)

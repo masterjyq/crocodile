@@ -20,7 +20,7 @@ import (
 func CreateTask(ctx context.Context, id, name string, tasktype define.TaskType, taskData interface{}, run bool,
 	parentTaskIds []string, parentRunParallel bool, childTaskIds []string, childRunParallel bool,
 	cronExpr string, timeout int, alarmUserIds []string, routePolicy define.RoutePolicy, expectCode int,
-	expectContent string, alarmStatus define.AlarmStatus, createByID, hostGroupID, remark string) error {
+	expectContent string, alarmStatus define.AlarmStatus, createByID, hostGroupID, remark string, runType int8, taskGroupId string) error {
 	createsql := `INSERT INTO crocodile_task 
 					(id,
 					name,
@@ -42,8 +42,10 @@ func CreateTask(ctx context.Context, id, name string, tasktype define.TaskType, 
 					hostGroupID,
 					remark,
 					createTime,
-					updateTime)
-				VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
+					updateTime,
+					runType, 
+					taskGroupId)
+				VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
 	conn, err := db.GetConn(ctx)
 	if err != nil {
 		return fmt.Errorf("db.GetConn failed: %w", err)
@@ -78,6 +80,8 @@ func CreateTask(ctx context.Context, id, name string, tasktype define.TaskType, 
 		remark,
 		createTime,
 		createTime,
+		runType,
+		taskGroupId,
 	)
 	if err != nil {
 		return fmt.Errorf("stmt.ExecContext failed: %w", err)
@@ -90,7 +94,7 @@ func CreateTask(ctx context.Context, id, name string, tasktype define.TaskType, 
 func ChangeTask(ctx context.Context, id string, run bool, taskType define.TaskType, taskData interface{},
 	parentTaskIds []string, parentRunParallel bool, childTaskIds []string, childRunParallel bool,
 	cronExpr string, timeout int, alarmUserIds []string, routePolicy define.RoutePolicy, expectCode int,
-	expectContent string, alarmStatus define.AlarmStatus, hostGroupID, remark string) error {
+	expectContent string, alarmStatus define.AlarmStatus, hostGroupID, remark string, runType int8, taskGroupId string) error {
 	changesql := `UPDATE crocodile_task 
 					SET hostGroupID=?,
 						run=?,
@@ -108,7 +112,9 @@ func ChangeTask(ctx context.Context, id string, run bool, taskType define.TaskTy
 						expectContent=?,
 						alarmStatus=?,
 						remark=?,
-						updateTime=?
+						updateTime=?,
+						runType = ?,
+						taskGroupId = ?
 					WHERE id=?`
 	conn, err := db.GetConn(ctx)
 	if err != nil {
@@ -157,6 +163,8 @@ func ChangeTask(ctx context.Context, id string, run bool, taskType define.TaskTy
 		alarmStatus,
 		remark,
 		updateTime,
+		runType,
+		taskGroupId,
 		id,
 	)
 	if err != nil {
@@ -207,14 +215,52 @@ func TaskIsUse(ctx context.Context, taskid string) (int, error) {
 	return count, nil
 }
 
+func GetTaskGroup(ctx context.Context) ([]define.GetTaskGroup, int, error) {
+	getSql := `SELECT id, name FROM crocodile_task_group`
+	tasks := []define.GetTaskGroup{}
+	count, err := countColums(ctx, getSql)
+	if err != nil {
+		return tasks, 0, fmt.Errorf("countColums failed: %w", err)
+	}
+	conn, err := db.GetConn(ctx)
+	if err != nil {
+		return tasks, 0, fmt.Errorf("db.GetConn failed: %w", err)
+	}
+	defer conn.Close()
+	stmt, err := conn.PrepareContext(ctx, getSql)
+	if err != nil {
+		return tasks, 0, fmt.Errorf("conn.PrepareContext failed: %w", err)
+	}
+	defer stmt.Close()
+	rows, err := stmt.QueryContext(ctx)
+	defer rows.Close()
+	for rows.Next() {
+		t := define.GetTaskGroup{}
+		err = rows.Scan(&t.Id,
+			&t.Name,
+		)
+		if err != nil {
+			log.Error("rows.Scan ", zap.Error(err))
+			continue
+		}
+		tasks = append(tasks, t)
+	}
+	return tasks, count, nil
+}
+
+// GetTasks get all tasks
+func GetTasksFromPage(ctx context.Context, offset, limit int, name, presearchname, createby string, runType int8, taskGroupId string) ([]define.GetTask, int, error) {
+	return getTasks(ctx, nil, name, offset, limit, true, presearchname, createby, runType, taskGroupId)
+}
+
 // GetTasks get all tasks
 func GetTasks(ctx context.Context, offset, limit int, name, presearchname, createby string) ([]define.GetTask, int, error) {
-	return getTasks(ctx, nil, name, offset, limit, true, presearchname, createby)
+	return getTasks(ctx, nil, name, offset, limit, true, presearchname, createby, -1, "")
 }
 
 // GetTaskByID get task by id
 func GetTaskByID(ctx context.Context, id string) (*define.GetTask, error) {
-	tasks, _, err := getTasks(ctx, []string{id}, "", 0, 0, true, "", "")
+	tasks, _, err := getTasks(ctx, []string{id}, "", 0, 0, true, "", "", -1, "")
 	if err != nil {
 		return nil, err
 	}
@@ -228,7 +274,7 @@ func GetTaskByID(ctx context.Context, id string) (*define.GetTask, error) {
 
 // GetTaskByName get task by id
 func GetTaskByName(ctx context.Context, name string) (*define.GetTask, error) {
-	tasks, _, err := getTasks(ctx, nil, name, 0, 0, true, "", "")
+	tasks, _, err := getTasks(ctx, nil, name, 0, 0, true, "", "", -1, "")
 	if err != nil {
 		return nil, err
 	}
@@ -248,7 +294,9 @@ func getTasks(ctx context.Context,
 	limit int,
 	first bool, /*Preventing endless loops*/
 	presearchname,
-	createbyid string) ([]define.GetTask, int, error) {
+	createbyid string,
+	runType int8,
+	taskGroupId string) ([]define.GetTask, int, error) {
 	getsql := `SELECT t.id,
 					t.name,
 					t.tasktype,
@@ -272,7 +320,9 @@ func getTasks(ctx context.Context,
 					t.hostGroupID,
 					t.remark,
 					t.createTime,
-					t.updateTime
+					t.updateTime,
+					t.runType,
+					t.taskGroupId
 				FROM 
 					crocodile_task as t,crocodile_user as u,crocodile_hostgroup as hg 
 				WHERE
@@ -301,6 +351,15 @@ func getTasks(ctx context.Context,
 		getsql += " AND t.createByID=?"
 		args = append(args, createbyid)
 	}
+	if runType != -1 {
+		getsql += " AND t.runType=?"
+		args = append(args, runType)
+	}
+	if taskGroupId != "" {
+		getsql += " AND t.taskGroupId=?"
+		args = append(args, taskGroupId)
+	}
+
 	tasks := []define.GetTask{}
 	if limit > 0 {
 		var err error
@@ -360,6 +419,8 @@ func getTasks(ctx context.Context,
 			&t.Remark,
 			&createTime,
 			&updateTime,
+			&t.RunType,
+			&t.TaskGroupId,
 		)
 		if err != nil {
 			log.Error("rows.Scan ", zap.Error(err))
@@ -384,7 +445,7 @@ func getTasks(ctx context.Context,
 		if parentTaskIds != "" {
 			t.ParentTaskIds = append(t.ParentTaskIds, strings.Split(parentTaskIds, ",")...)
 			if first {
-				ptasks, _, err := getTasks(ctx, t.ParentTaskIds, "", 0, 0, false, "", "")
+				ptasks, _, err := getTasks(ctx, t.ParentTaskIds, "", 0, 0, false, "", "", -1, "")
 				if err != nil {
 					log.Error("getTasks failed", zap.Error(err))
 				}
@@ -399,7 +460,7 @@ func getTasks(ctx context.Context,
 		if childTaskIds != "" {
 			t.ChildTaskIds = append(t.ChildTaskIds, strings.Split(childTaskIds, ",")...)
 			if first {
-				ctasks, _, err := getTasks(ctx, t.ChildTaskIds, "", 0, 0, false, "", "")
+				ctasks, _, err := getTasks(ctx, t.ChildTaskIds, "", 0, 0, false, "", "", -1, "")
 				if err != nil {
 					log.Error("getTasks failed", zap.Error(err))
 				}

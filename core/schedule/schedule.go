@@ -650,7 +650,7 @@ Check:
 	return alarmerr
 }
 
-//  sort running task
+// sort running task
 type runningTask []*define.RunTask
 
 func (rt runningTask) Len() int { return len(rt) }

@@ -222,6 +222,8 @@ type Task struct {
 	ExpectContent     string      `json:"expect_content"`                               // expect task return content. if not set do not check
 	AlarmStatus       AlarmStatus `json:"alarm_status" binding:"required,min=-2,max=1"` // alarm when task run success or fail or all all:-2 failed: -1 success: 1
 	Remark            string      `json:"remark" binding:"max=100"`
+	RunType           int8        `json:"run_type"`      // 任务类型
+	TaskGroupId       string      `json:"task_group_id"` // 任务类型
 }
 
 // AlarmStatus task is alarm
@@ -295,7 +297,14 @@ type GetTask struct {
 	ExpectContent     string      `json:"expect_content" comment:"期望返回内容"`
 	AlarmStatus       AlarmStatus `json:"alarm_status"`
 	AlarmStatusDesc   string      `json:"alarm_statusdesc" comment:"报警策略"`
+	RunType           int8        `json:"run_type"`
+	TaskGroupId       string      `json:"task_group_id"`
 	Common
+}
+
+type GetTaskGroup struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
 // RoutePolicy set a task hot to select run worker

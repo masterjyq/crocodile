@@ -70,7 +70,7 @@ func AddUser(ctx context.Context, name, hashpassword string, role define.Role, r
 					updateTime
 				)
 				VALUES
-				(?,?,?,?,?,?,?)`
+				(?,?,?,?,?,?,?,?)`
 	conn, err := db.GetConn(ctx)
 	if err != nil {
 		return fmt.Errorf("db.Db.GetConn failed: %w", err)

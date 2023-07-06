@@ -11,7 +11,6 @@ import (
 	"github.com/labulaka521/crocodile/core/schedule"
 	"github.com/labulaka521/crocodile/core/utils/define"
 	mylog "github.com/labulaka521/crocodile/core/utils/log"
-	"github.com/labulaka521/crocodile/core/version"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -41,7 +40,7 @@ func Server() *cobra.Command {
 				log.Fatal("InitRedis failed", zap.Error(err))
 			}
 			model.InitRabc()
-			go version.CheckLatest() // check new version
+			// go version.CheckLatest() // check new version
 		},
 		PostRunE: func(cmd *cobra.Command, args []string) error {
 			lis, err := router.GetListen(define.Server)

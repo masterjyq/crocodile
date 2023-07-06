@@ -72,7 +72,7 @@ func CreateTask(c *gin.Context) {
 	id := utils.GetID()
 	err = model.CreateTask(ctx, id, task.Name, task.TaskType, task.TaskData, task.Run, task.ParentTaskIds, task.ParentRunParallel,
 		task.ChildTaskIds, task.ChildRunParallel, task.Cronexpr, task.Timeout, task.AlarmUserIds, task.RoutePolicy,
-		task.ExpectCode, task.ExpectContent, task.AlarmStatus, c.GetString("uid"), task.HostGroupID, task.Remark,
+		task.ExpectCode, task.ExpectContent, task.AlarmStatus, c.GetString("uid"), task.HostGroupID, task.Remark, task.RunType, task.TaskGroupId,
 	)
 	if err != nil {
 		log.Error("CreateTask failed", zap.Error(err))
@@ -162,7 +162,7 @@ func ChangeTask(c *gin.Context) {
 
 	err = model.ChangeTask(ctx, task.ID, task.Run, task.TaskType, task.TaskData, task.ParentTaskIds, task.ParentRunParallel,
 		task.ChildTaskIds, task.ChildRunParallel, task.Cronexpr, task.Timeout, task.AlarmUserIds, task.RoutePolicy,
-		task.ExpectCode, task.ExpectContent, task.AlarmStatus, task.HostGroupID, task.Remark,
+		task.ExpectCode, task.ExpectContent, task.AlarmStatus, task.HostGroupID, task.Remark, task.RunType, task.TaskGroupId,
 	)
 	if err != nil {
 		log.Error("ChangeTask failed", zap.Error(err))
@@ -285,6 +285,19 @@ func DeleteTask(c *gin.Context) {
 
 }
 
+func GetTaskGroup(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(),
+		config.CoreConf.Server.DB.MaxQueryTime.Duration)
+	defer cancel()
+	hgs, count, err := model.GetTaskGroup(ctx)
+	if err != nil {
+		log.Error("GetTasks failed", zap.Error(err))
+		resp.JSON(c, resp.ErrInternalServer, nil)
+		return
+	}
+	resp.JSON(c, resp.Success, hgs, count)
+}
+
 // GetTasks get tasks
 // @Summary get tasks
 // @Tags Task
@@ -302,8 +315,10 @@ func GetTasks(c *gin.Context) {
 	defer cancel()
 	type GetQuery struct {
 		define.Query
-		PSName string `form:"psname"`
-		Self   bool   `form:"self"`
+		PSName      string `form:"psname"`
+		Self        bool   `form:"self"`
+		RunType     string `form:"run_type"`
+		TaskGroupId string `form:"groupId"`
 	}
 	var (
 		q   GetQuery
@@ -322,7 +337,14 @@ func GetTasks(c *gin.Context) {
 	if q.Self {
 		createby = c.GetString("uid")
 	}
-	hgs, count, err := model.GetTasks(ctx, q.Offset, q.Limit, "", q.PSName, createby)
+	runTypeInt := -1
+	if q.RunType != "" {
+		runTypeInt, _ = strconv.Atoi(q.RunType)
+	}
+	if q.TaskGroupId == "" {
+		q.TaskGroupId = "0"
+	}
+	hgs, count, err := model.GetTasksFromPage(ctx, q.Offset, q.Limit, "", q.PSName, createby, int8(runTypeInt), q.TaskGroupId)
 	// 数据脱敏
 	for i := 0; i < len(hgs); i++ {
 		if hgs[i].TaskType == 3 {
@@ -895,7 +917,9 @@ Next:
 		task.AlarmStatus,
 		c.GetString("uid"),
 		task.HostGroupID,
-		fmt.Sprintf("从任务%s克隆", task.Name))
+		fmt.Sprintf("从任务%s克隆", task.Name),
+		task.RunType,
+		task.TaskGroupId)
 	if err != nil {
 		log.Error(" model.CreateTask failed", zap.Error(err))
 		resp.JSON(c, resp.ErrInternalServer, nil)

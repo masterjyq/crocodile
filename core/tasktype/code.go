@@ -20,9 +20,10 @@ var _ TaskRuner = DataCode{}
 
 // DataCode run code
 type DataCode struct {
-	Lang     Lang   `json:"lang"`
-	LangDesc string `json:"langdesc" comment:"Lang"`
-	Code     string `json:"code" comment:"Code"`
+	Lang     Lang     `json:"lang"`
+	LangDesc string   `json:"langdesc" comment:"Lang"`
+	Code     string   `json:"code" comment:"Code"`
+	Params   []string `json:"params" comment:"Code"`
 }
 
 // Lang task type lang code
@@ -227,7 +228,7 @@ func runwindowsbat(ctx context.Context, code string) (*exec.Cmd, string, error) 
 }
 
 // Type return task run lang
-func (ds DataCode)Type() string {
+func (ds DataCode) Type() string {
 	return ds.Lang.String()
 }
 
@@ -258,10 +259,15 @@ func (ds DataCode) Run(ctx context.Context) io.ReadCloser {
 		}
 		cmd.Stdout = pw
 		cmd.Stderr = pw
+		stdin, err := cmd.StdinPipe()
 		err = cmd.Start()
 		if err != nil {
 			pw.Write([]byte(err.Error()))
 			return
+		}
+		// 输入参数
+		for _, param := range ds.Params {
+			io.WriteString(stdin, param+"\n")
 		}
 
 		err = cmd.Wait()

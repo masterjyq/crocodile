@@ -412,7 +412,7 @@ func RunTask(c *gin.Context) {
 		config.CoreConf.Server.DB.MaxQueryTime.Duration)
 	defer cancel()
 
-	runtask := define.GetID{}
+	runtask := define.StartTask{}
 	err := c.ShouldBindJSON(&runtask)
 	if err != nil {
 		resp.JSON(c, resp.ErrBadRequest, nil)
@@ -450,6 +450,7 @@ func RunTask(c *gin.Context) {
 	event := schedule.EventData{
 		TaskID: runtask.ID,
 		TE:     schedule.RunEvent,
+		Params: runtask.Params,
 	}
 	res, err := json.Marshal(event)
 	if err != nil {

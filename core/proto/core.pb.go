@@ -29,6 +29,7 @@ type TaskReq struct {
 	TaskId               string   `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
 	TaskType             int32    `protobuf:"varint,2,opt,name=task_type,json=taskType,proto3" json:"task_type,omitempty"`
 	TaskData             []byte   `protobuf:"bytes,3,opt,name=task_data,json=taskData,proto3" json:"task_data,omitempty"`
+	Params               []string `protobuf:"bytes,4,rep,name=params,json=params,proto3" json:"params,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -76,6 +77,13 @@ func (m *TaskReq) GetTaskType() int32 {
 func (m *TaskReq) GetTaskData() []byte {
 	if m != nil {
 		return m.TaskData
+	}
+	return nil
+}
+
+func (m *TaskReq) GetParams() []string {
+	if m != nil {
+		return m.Params
 	}
 	return nil
 }

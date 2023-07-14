@@ -95,6 +95,11 @@ func (tasktype TaskRespType) String() string {
 	}
 }
 
+type StartTask struct {
+	ID     string   `json:"id" form:"id" binding:"required,len=18"`
+	Params []string `json:"params" form:"params"`
+}
+
 // GetID get task id in post
 type GetID struct {
 	ID string `json:"id" form:"id" binding:"required,len=18"`

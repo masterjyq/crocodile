@@ -33,6 +33,10 @@ func GetDataRun(t *pb.TaskReq) (TaskRuner, error) {
 		if err != nil {
 			return nil, err
 		}
+		// 看看是不是传了参数, 没有传就用默认的
+		if t.Params != nil && len(t.Params) > 0 {
+			code.Params = t.Params
+		}
 		code.LangDesc = code.Lang.String()
 		return code, err
 

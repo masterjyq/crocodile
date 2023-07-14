@@ -225,7 +225,7 @@ func tryDisConn(gRPCServer *grpc.Server, httpServer *http.Server, mode define.Ru
 
 	signals := make(chan os.Signal, 1)
 
-	signal.Notify(signals, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGILL, syscall.SIGTRAP, syscall.SIGABRT)
+	signal.Notify(signals, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGILL, syscall.SIGTRAP, syscall.SIGABRT, syscall.SIGTERM)
 
 	log.Info("wait signals")
 	select {

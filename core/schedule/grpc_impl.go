@@ -96,7 +96,7 @@ func (ts *TaskService) RunTask(req *pb.TaskReq, stream pb.Task_RunTaskServer) er
 		}
 		return nil
 	}
-	log.Info("recv new task", zap.Any("taskid", req.GetTaskId()), zap.String("codetype", r.Type()))
+	log.Info("recv new task", zap.Any("taskid", req.GetTaskId()), zap.String("codetype", r.Type()), zap.Any("params", req.GetParams()))
 	taskctx, taskcancel := context.WithCancel(stream.Context())
 
 	runningtask.Add(req.GetTaskId(), taskcancel)

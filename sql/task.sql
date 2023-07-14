@@ -28,3 +28,7 @@ CREATE TABLE IF NOT EXISTS `crocodile_task` (
 	KEY `idx_name`(`name`),
 	KEY `idx_cbi` (`createByID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE crocodile_task ADD runType INT(11) DEFAULT 0 NOT NULL COMMENT '0:定时 1:单次 2:持续';
+
+ALTER TABLE crocodile_task ADD taskGroupId char(18) DEFAULT '0' NOT NULL COMMENT '任务组ID';

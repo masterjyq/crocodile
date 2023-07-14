@@ -62,6 +62,7 @@ type task2 struct {
 	errCode     int                 // failed task return code
 	errMsg      string              // task run failed errmsg
 	errTasktype define.TaskRespType // failed task type
+	params      []string            // 任务参数
 }
 
 const (
@@ -554,9 +555,13 @@ func (t *task2) islock() (bool, error) {
 	}
 	return true, nil
 }
+func (t *task2) StartRunDelay(trigger define.Trigger) {
+	time.Sleep(15 * time.Second)
+	t.StartRun(trigger, nil)
+}
 
 // RunTask start run task
-func (t *task2) StartRun(trigger define.Trigger) {
+func (t *task2) StartRun(trigger define.Trigger, params []string) {
 
 	lockid := "task:runlock:" + t.id
 	ok, err := t.islock()
@@ -692,7 +697,7 @@ Next:
 	})
 	// master task
 	g.Go(func(ctx context.Context) error {
-		return t.runTask(ctx, task.ID, define.MasterTask)
+		return t.runTask(ctx, task.ID, define.MasterTask, params)
 	})
 	// childs task
 	g.Go(func(ctx context.Context) error {
@@ -728,7 +733,7 @@ func (t *task2) runMultiTasks(ctx context.Context, RunParallel bool,
 	for _, id := range taskids {
 		taskid := id
 		g.Go(func(ctx context.Context) error {
-			return t.runTask(ctx, taskid, tasktype)
+			return t.runTask(ctx, taskid, tasktype, nil)
 		})
 	}
 	return g.Wait()
@@ -737,7 +742,7 @@ func (t *task2) runMultiTasks(ctx context.Context, RunParallel bool,
 
 // runTask start run task,log will store
 func (t *task2) runTask(ctx context.Context, /*real run task id*/
-	id string, taskruntype define.TaskRespType) error {
+	id string, taskruntype define.TaskRespType, params []string) error {
 	var (
 		// error
 		err error
@@ -811,6 +816,7 @@ func (t *task2) runTask(ctx context.Context, /*real run task id*/
 		TaskId:   id,
 		TaskType: int32(taskdata.TaskType),
 		TaskData: tdata,
+		Params:   params,
 	}
 
 	// taskctx only use RunTask
@@ -849,7 +855,7 @@ func (t *task2) runTask(ctx context.Context, /*real run task id*/
 				// worker host is down,so we need run this fail task again
 				log.Error("worker host is down, run task again", zap.String("taskid", id))
 				t.writelogt(taskruntype, id, "worker host %s is down,so run task %s again", conn.Target(), taskdata.Name)
-				return t.runTask(ctx, id, taskruntype)
+				return t.runTask(ctx, id, taskruntype, params)
 			}
 			t.writelogt(taskruntype, id, "Task %s[%s] Run Fail: %v", taskdata.Name, id, err.Error())
 			// Alarm
@@ -972,7 +978,21 @@ func Init2() error {
 	}
 	log.Debug("start init task", zap.Int("task", len(eps)))
 	for _, t := range eps {
-		Cron2.addtask(t.ID, t.Name, t.Cronexpr, GetRoutePolicy(t.HostGroupID, t.RoutePolicy), t.Run)
+		// 非定时任务，不自动运行
+		if t.RunType == 0 {
+			Cron2.addtask(t.ID, t.Name, t.Cronexpr, GetRoutePolicy(t.HostGroupID, t.RoutePolicy), t.Run)
+		} else {
+			Cron2.addtask(t.ID, t.Name, t.Cronexpr, GetRoutePolicy(t.HostGroupID, t.RoutePolicy), false)
+		}
+		// 持续性任务, 可运行，立马拉起来
+		if t.RunType == 2 && t.Run {
+			task, ok := Cron2.GetTask(t.ID)
+			if !ok {
+				log.Error("Can not get Task", zap.String("taskid", t.ID))
+			}
+			// 启动， 持续性和状态是Run的. 15秒之后在拉起，worker 可能没注册
+			go task.StartRunDelay(define.Manual)
+		}
 	}
 
 	go RecvEvent()
@@ -1079,7 +1099,7 @@ func (s *cacheSchedule2) runSchedule(taskid string) {
 				log.Warn("task is stop run by auto schedule", zap.String("taskname", task.name), zap.String("taskid", task.id))
 				continue
 			}
-			go task.StartRun(define.Auto)
+			go task.StartRun(define.Auto, nil)
 		}
 	}
 }

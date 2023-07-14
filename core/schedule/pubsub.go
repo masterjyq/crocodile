@@ -38,6 +38,7 @@ const (
 type EventData struct {
 	TaskID string    // task id
 	TE     TaskEvent // task event: add change delete stop task
+	Params []string
 }
 
 // RecvEvent recv task event
@@ -67,7 +68,25 @@ func dealEvent(data []byte) {
 			log.Error("model.GetTaskByID failed", zap.Error(err))
 			return
 		}
-		Cron2.addtask(task.ID, task.Name, task.Cronexpr, GetRoutePolicy(task.HostGroupID, task.RoutePolicy), task.Run)
+		// 非定时任务，不自动运行
+		if task.RunType == 0 {
+			Cron2.addtask(task.ID, task.Name, task.Cronexpr, GetRoutePolicy(task.HostGroupID, task.RoutePolicy), task.Run)
+		} else {
+			Cron2.addtask(task.ID, task.Name, task.Cronexpr, GetRoutePolicy(task.HostGroupID, task.RoutePolicy), false)
+		}
+
+		// 持续性任务, 可运行，立马拉起来
+		if task.RunType == 2 && task.Run {
+			// 杀掉原来的
+			Cron2.killtask(subdata.TaskID)
+			task, ok := Cron2.GetTask(subdata.TaskID)
+			if !ok {
+				log.Error("Can not get Task", zap.String("taskid", subdata.TaskID))
+				return
+			}
+			// 启动， 持续性和状态是Run的
+			go task.StartRun(define.Manual, nil)
+		}
 	case DeleteEvent:
 		Cron2.deletetask(subdata.TaskID)
 	case RunEvent:
@@ -76,7 +95,7 @@ func dealEvent(data []byte) {
 			log.Error("Can not get Task", zap.String("taskid", subdata.TaskID))
 			return
 		}
-		go task.StartRun(define.Manual)
+		go task.StartRun(define.Manual, subdata.Params)
 	case KillEvent:
 		Cron2.killtask(subdata.TaskID)
 	default:
